@@ -1,3 +1,7 @@
-import { ShoppingList } from "./ShoppingList";
+import { ShoppingListPage } from "./ShoppingListPage";
+import { RecipesPage } from "./RecipesPage";
+import { ExpensesPage } from "./ExpensesPage";
+import { SettingsPage } from "./SettingsPage";
 
-export { ShoppingList };
+
+export { ShoppingListPage, RecipesPage, ExpensesPage, SettingsPage };

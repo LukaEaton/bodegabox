@@ -1,4 +1,4 @@
-export function ShoppingList() {
+export function ShoppingListPage() {
 	return (
         <div>lists</div>
 	);
