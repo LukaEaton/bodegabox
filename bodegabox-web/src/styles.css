@@ -1,0 +1,26 @@
+body {
+    background-color: rgb(44, 43, 43);
+    color: white;
+}
+
+nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+nav button {
+    width: 100%;
+    border: none;
+    border-top: 1px solid rgb(15, 15, 15);
+    padding: 0.75rem;
+    background-color: transparent;
+    color: white;
+}
+
+nav button.active {
+    border-top: 2px solid white;
+}
