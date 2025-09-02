@@ -1,4 +1,5 @@
 import { Navigation } from "./Navigation";
 import { DropdownSelect } from "./DropdownSelect";
+import { Accordion } from "./Accordian";
 
-export { Navigation, DropdownSelect };
+export { Navigation, DropdownSelect, Accordion };

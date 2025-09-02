@@ -18,7 +18,8 @@
     "@vanilla-extract/vite-plugin": "^5.0.6",
     "@vitejs/plugin-react": "^4.5.2",
     "typescript": "^5.8.3",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "vite-plugin-svgr": "^4.5.0"
   },
   "packageManager": "npm@10.9.3"
 }

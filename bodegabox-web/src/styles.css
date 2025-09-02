@@ -1,5 +1,13 @@
 body {
+    font-family: Optima, Segoe, "Segoe UI", Candara, Calibri, Arial, sans-serif; 
     background-color: rgb(44, 43, 43);
+    color: white;
+    font-size: 1rem;
+}
+
+button {
+    font-family: Optima, Segoe, "Segoe UI", Candara, Calibri, Arial, sans-serif; 
+    font-size: 1rem;
     color: white;
 }
 
@@ -23,4 +31,8 @@ nav button {
 
 nav button.active {
     border-top: 2px solid white;
+}
+
+.list-dropdown {
+    width: 85%;
 }

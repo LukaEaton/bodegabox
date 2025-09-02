@@ -9,6 +9,7 @@ export function Navigation() {
     const tabsData = [
         { id: 1, label: 'Shopping List', path: '/list' },
         { id: 2, label: 'Recipes', path: '/recipes' },
+        { id: 5, label: 'Meal Plan', path: '/meal-plan' },
         { id: 3, label: 'Expenses', path: '/expenses' },
         { id: 4, label: 'Settings', path: '/settings' }
     ];

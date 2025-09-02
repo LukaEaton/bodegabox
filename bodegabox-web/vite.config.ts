@@ -1,8 +1,8 @@
 import { defineConfig } from "vite";
 import { vanillaExtractPlugin } from "@vanilla-extract/vite-plugin";
+import svgr from "vite-plugin-svgr";
 import react from "@vitejs/plugin-react";
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), vanillaExtractPlugin()],
+  plugins: [svgr(), react(), vanillaExtractPlugin()],
 });

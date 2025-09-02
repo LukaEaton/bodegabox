@@ -1,18 +1,25 @@
 import { useState, useRef, useEffect } from "react";
 
 type Option = {
-  value: number;
+  value: number | null;
   label: string;
 };
 
 type DropdownSelectProps = {
   options: Option[];
   value: number | null;
-  onChange: (value: number) => void;
+  onChange: (value: number | null) => void;
   placeholder?: string;
+  backgroundColor: string;
+  selectedBackgroundColor: string;
+  fontColor: string;
+  borderColor: string;
+  className?: string;
 };
 
-export function DropdownSelect({ options, value, onChange, placeholder = "Select..." }: DropdownSelectProps) {
+export function DropdownSelect({ options, value, onChange, placeholder = "Select...", 
+    backgroundColor, selectedBackgroundColor, borderColor, className }: DropdownSelectProps) {
+
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -27,17 +34,19 @@ export function DropdownSelect({ options, value, onChange, placeholder = "Select
   }, []);
 
   return (
-    <div ref={ref} style={{ position: "relative", display: "inline-block", minWidth: 160 }}>
+    <div ref={ref} className={className} style={{ position: "relative" }}>
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
         style={{
           width: "100%",
-          padding: "8px",
-          border: "1px solid #ccc",
-          background: "#fff",
+          padding: "10px",
+          border: `1px solid ${borderColor}`,
+          background: backgroundColor,
+          color: "white",
           cursor: "pointer",
-          textAlign: "left"
+          textAlign: "left", 
+          borderRadius: "4px"
         }}
       >
         {options.find(opt => opt.value == value)?.label || placeholder}
@@ -50,9 +59,11 @@ export function DropdownSelect({ options, value, onChange, placeholder = "Select
             top: "100%",
             left: 0,
             right: 0,
-            background: "#fff",
-            border: "1px solid #ccc",
-            zIndex: 10
+            background: backgroundColor,
+            border: `1px solid ${borderColor}`,
+            zIndex: 10,
+            marginTop: "5px",
+            borderRadius: "4px",
           }}
         >
           {options.map(opt => (
@@ -63,9 +74,9 @@ export function DropdownSelect({ options, value, onChange, placeholder = "Select
                 setOpen(false);
               }}
               style={{
-                padding: "8px",
+                padding: "10px",
                 cursor: "pointer",
-                background: value === opt.value ? "#eee" : "#fff"
+                background: value === opt.value ? selectedBackgroundColor : backgroundColor
               }}
             >
               {opt.label}
