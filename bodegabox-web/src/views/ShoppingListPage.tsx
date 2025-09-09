@@ -3,6 +3,8 @@ import { Accordion, DropdownSelect } from "../components";
 import { IngredientCard } from "../components/IngredientCard";
 import PullToRefresh from "../components/PullToRefresh";
 import IngredientService from "../services/IngredientService";
+import StoreService from "../services/StoreService";
+import CategoryService from "../services/CategoryService";
 
 export function ShoppingListPage() {
 
@@ -29,27 +31,17 @@ export function ShoppingListPage() {
 			setAllIngredients(ingredients)
 		);
 
-		// TODO: Fetch stores from backend
-		const storesList = [
-			{ id: 1, name: "Walmart" },
-			{ id: 2, name: "Target" },
-			{ id: 3, name: "Whole Foods" }
-		].map(store => ({
-			value: store.id,
-			label: store.name
-		}));
-		setStores([{ value: null, label: "Select Store..." }, ...storesList]);
+		StoreService.fetchStores().then(storesList =>
+			storesList.map(store => ({ value: store.id, label: store.name }))
+		).then(storesList =>
+			setStores([{ value: null, label: "Select Store..." }, ...storesList])
+		);
 
-		// TODO: Fetch categories from backend
-		const categoriesList = [
-			{ id: 1, name: "🥬Produce" },
-			{ id: 2, name: "🥛Dairy" },
-			{ id: 3, name: "🥖Bakery" },
-			{ id: 4, name: "🥩Meat" },
-			{ id: 5, name: "🥤Beverages" }
-		];
-		setCategories(categoriesList);
-	}, [])
+		CategoryService.fetchStores().then(categoriesList =>
+			setCategories(categoriesList)
+		);
+
+	}, []);
 
 	useEffect(() => {
 		setFilteredIngredients(allIngredients.filter(ingredient =>
