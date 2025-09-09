@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Accordion, DropdownSelect } from "../components";
 import { IngredientCard } from "../components/IngredientCard";
+import PullToRefresh from "../components/PullToRefresh";
+import IngredientService from "../services/IngredientService";
 
 export function ShoppingListPage() {
 
@@ -22,20 +24,10 @@ export function ShoppingListPage() {
 	}>>([]);
 
 	useEffect(() => {
-		// TODO: Fetch ingredients from backend
-		const allIngredientsList = [
-			{ id: 1, name: "Apples", categoryId: 1, storeId: 1, description: "Fresh and crispy" },
-			{ id: 2, name: "Bananas", categoryId: 1, storeId: 2 },
-			{ id: 3, name: "Carrots", categoryId: 1, storeId: 3 },
-			{ id: 4, name: "Milk", categoryId: 2, storeId: 1, description: "2% Fat" },
-			{ id: 5, name: "Cheese", categoryId: 2, storeId: 2 },
-			{ id: 6, name: "Bread", categoryId: 3, storeId: 3, description: "Whole grain" },
-			{ id: 7, name: "Chicken", categoryId: 4, storeId: 1 },
-			{ id: 8, name: "Beef", categoryId: 4, storeId: 2, description: "Grass-fed" },
-			{ id: 9, name: "Soda", categoryId: 5, storeId: 1 },
-			{ id: 10, name: "Juice", categoryId: 5, storeId: 3 }
-		];
-		setAllIngredients(allIngredientsList);
+		
+		IngredientService.fetchIngredients().then(ingredients =>
+			setAllIngredients(ingredients)
+		);
 
 		// TODO: Fetch stores from backend
 		const storesList = [
@@ -97,26 +89,30 @@ export function ShoppingListPage() {
 				/>
 			</div>
 			<div style={{ marginTop: "20px" }}>
-                {categories.map(category => {
-                    const categoryIngredients = filteredIngredients.filter(
-                        ingredient => ingredient.categoryId == category.id
-                    );
-                    return (
-                        <Accordion key={category.id} title={category.name}
-							forceExpand={expandAll}>
-                            <ul style={{ margin: 0, paddingLeft: "45px" }}>
-                                {categoryIngredients.map(ingredient => (
-                                    <li 
-										style={{ 
-											listStyleType: "none"
-										}}
-										key={ingredient.id}
-									><IngredientCard ingredient={ingredient} /></li>
-                                ))}
-                            </ul>
-                        </Accordion>
-                    );
-                })}
+				<PullToRefresh onRefresh={() => IngredientService.fetchIngredients().then(ingredients =>
+					setAllIngredients(ingredients)
+				)}>
+					{categories.map(category => {
+						const categoryIngredients = filteredIngredients.filter(
+							ingredient => ingredient.categoryId == category.id
+						);
+						return (
+							<Accordion key={category.id} title={category.name}
+								forceExpand={expandAll}>
+								<ul style={{ margin: 0, paddingLeft: "45px" }}>
+									{categoryIngredients.map(ingredient => (
+										<li 
+											style={{ 
+												listStyleType: "none"
+											}}
+											key={ingredient.id}
+										><IngredientCard ingredient={ingredient} /></li>
+									))}
+								</ul>
+							</Accordion>
+						);
+					})}
+				</PullToRefresh>
             </div>
 		</>
 	);
