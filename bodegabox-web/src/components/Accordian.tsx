@@ -41,8 +41,8 @@ export function Accordion({ title, children, forceExpand }: AccordionProps) {
             >
                 <path 
                     d="M10 7L15 12L10 17" stroke="#ffffff" 
-                    stroke-width="1.5" stroke-linecap="round" 
-                    stroke-linejoin="round">
+                    strokeWidth="1.5" strokeLinecap="round" 
+                    strokeLinejoin="round">
                 </path>
             </svg>
             <h2 style={{ margin: "0px" }}>{title}</h2>

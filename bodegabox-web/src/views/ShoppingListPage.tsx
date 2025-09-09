@@ -1,59 +1,69 @@
 import { useEffect, useState } from "react";
 import { Accordion, DropdownSelect } from "../components";
+import { IngredientCard } from "../components/IngredientCard";
 
 export function ShoppingListPage() {
 
 	const [expandAll, setExpandAll] = useState<boolean | null>(true);
+	const [stores, setStores] = useState<Array<{ value: number | null; label: string }>>([]);
 	const [selectedStore, setSelectedStore] = useState<number | null>(null);
-	const [ingredients, setIngredients] = useState<Array<{
+	const [categories, setCategories] = useState<Array<{ id: number; name: string }>>([]);
+	const [allIngredients, setAllIngredients] = useState<Array<{
+		id: number;
+		name: string;
+		categoryId: number;
+		storeId: number;
+	}>>([]);
+	const [filteredIngredients, setFilteredIngredients] = useState<Array<{
 		id: number;
 		name: string;
 		categoryId: number;
 		storeId: number;
 	}>>([]);
 
-	// TODO: Fetch stores from backend
-	const stores = [
-		{ id: 1, name: "Walmart" },
-		{ id: 2, name: "Target" },
-		{ id: 3, name: "Whole Foods" }
-	].map(store => ({
-		value: store.id,
-		label: store.name
-	}));
-	const storeOptions = [
-		{ value: null, label: "Select Store..." },
-		...stores
-	];
+	useEffect(() => {
+		// TODO: Fetch ingredients from backend
+		const allIngredientsList = [
+			{ id: 1, name: "Apples", categoryId: 1, storeId: 1, description: "Fresh and crispy" },
+			{ id: 2, name: "Bananas", categoryId: 1, storeId: 2 },
+			{ id: 3, name: "Carrots", categoryId: 1, storeId: 3 },
+			{ id: 4, name: "Milk", categoryId: 2, storeId: 1, description: "2% Fat" },
+			{ id: 5, name: "Cheese", categoryId: 2, storeId: 2 },
+			{ id: 6, name: "Bread", categoryId: 3, storeId: 3, description: "Whole grain" },
+			{ id: 7, name: "Chicken", categoryId: 4, storeId: 1 },
+			{ id: 8, name: "Beef", categoryId: 4, storeId: 2, description: "Grass-fed" },
+			{ id: 9, name: "Soda", categoryId: 5, storeId: 1 },
+			{ id: 10, name: "Juice", categoryId: 5, storeId: 3 }
+		];
+		setAllIngredients(allIngredientsList);
 
-	// TODO: Fetch categories from backend
-	const categories = [
-		{ id: 1, name: "🥬Produce" },
-		{ id: 2, name: "🥛Dairy" },
-		{ id: 3, name: "🥖Bakery" },
-		{ id: 4, name: "🥩Meat" },
-		{ id: 5, name: "🥤Beverages" }
-	];
+		// TODO: Fetch stores from backend
+		const storesList = [
+			{ id: 1, name: "Walmart" },
+			{ id: 2, name: "Target" },
+			{ id: 3, name: "Whole Foods" }
+		].map(store => ({
+			value: store.id,
+			label: store.name
+		}));
+		setStores([{ value: null, label: "Select Store..." }, ...storesList]);
 
-	// TODO: Fetch ingredients from backend
-	const allIngredients = [
-		{ id: 1, name: "Apples", categoryId: 1, storeId: 1 },
-		{ id: 2, name: "Bananas", categoryId: 1, storeId: 2 },
-		{ id: 3, name: "Carrots", categoryId: 1, storeId: 3 },
-		{ id: 4, name: "Milk", categoryId: 2, storeId: 1 },
-		{ id: 5, name: "Cheese", categoryId: 2, storeId: 2 },
-		{ id: 6, name: "Bread", categoryId: 3, storeId: 3 },
-		{ id: 7, name: "Chicken", categoryId: 4, storeId: 1 },
-		{ id: 8, name: "Beef", categoryId: 4, storeId: 2 },
-		{ id: 9, name: "Soda", categoryId: 5, storeId: 1 },
-		{ id: 10, name: "Juice", categoryId: 5, storeId: 3 }
-	];
+		// TODO: Fetch categories from backend
+		const categoriesList = [
+			{ id: 1, name: "🥬Produce" },
+			{ id: 2, name: "🥛Dairy" },
+			{ id: 3, name: "🥖Bakery" },
+			{ id: 4, name: "🥩Meat" },
+			{ id: 5, name: "🥤Beverages" }
+		];
+		setCategories(categoriesList);
+	}, [])
 
 	useEffect(() => {
-		setIngredients(allIngredients.filter(ingredient =>
+		setFilteredIngredients(allIngredients.filter(ingredient =>
 			selectedStore ? ingredient.storeId == selectedStore : true
 		));
-	}, [selectedStore]);
+	}, [selectedStore, allIngredients]);
 
 	return (
 		<>
@@ -75,7 +85,7 @@ export function ShoppingListPage() {
 			</div>
 			<div style={{ margin: "20px 5px" }}>
 				<DropdownSelect 
-					options={storeOptions}
+					options={stores}
 					value={selectedStore}
 					onChange={setSelectedStore}
 					placeholder="Select Store..."
@@ -88,7 +98,7 @@ export function ShoppingListPage() {
 			</div>
 			<div style={{ marginTop: "20px" }}>
                 {categories.map(category => {
-                    const categoryIngredients = ingredients.filter(
+                    const categoryIngredients = filteredIngredients.filter(
                         ingredient => ingredient.categoryId == category.id
                     );
                     return (
@@ -101,7 +111,7 @@ export function ShoppingListPage() {
 											listStyleType: "none"
 										}}
 										key={ingredient.id}
-									><h4 style={{ margin: "5px" }}>{ingredient.name}</h4></li>
+									><IngredientCard ingredient={ingredient} /></li>
                                 ))}
                             </ul>
                         </Accordion>
