@@ -6,26 +6,36 @@ export interface Ingredient {
   description?: string;
 }
 
-const IngredientService = {
-    async fetchIngredients(): Promise<Ingredient[]> {
-        // TODO: Fetch ingredients from backend
-        const allIngredientsList = [
-            { id: 1, name: "Apples", categoryId: 1, storeId: 1, description: "Fresh and crispy" },
-            { id: 2, name: "Bananas", categoryId: 1, storeId: 2 },
-            { id: 3, name: "Carrots", categoryId: 1, storeId: 3 },
-            { id: 4, name: "Milk", categoryId: 2, storeId: 1, description: "2% Fat" },
-            { id: 5, name: "Cheese", categoryId: 2, storeId: 2 },
-            { id: 6, name: "Bread", categoryId: 3, storeId: 3, description: "Whole grain" },
-            { id: 7, name: "Chicken", categoryId: 4, storeId: 1 },
-            { id: 8, name: "Beef", categoryId: 4, storeId: 2, description: "Grass-fed" },
-            { id: 9, name: "Soda", categoryId: 5, storeId: 1 },
-            { id: 10, name: "Juice", categoryId: 5, storeId: 3 }
-        ];
-        // Simulate network delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        return allIngredientsList;
-    }
+const API_BASE_URL = "http://localhost:8080";
 
-}
+const IngredientService = {
+  async fetchIngredients(): Promise<Ingredient[]> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/ingredients/`);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch ingredients: ${response.statusText}`);
+      }
+      const data: Ingredient[] = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching ingredients:", error);
+      return [];
+    }
+  },
+
+  async fetchIngredientById(id: number): Promise<Ingredient | null> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/ingredients/${id}`);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch ingredient ${id}: ${response.statusText}`);
+      }
+      const ingredient: Ingredient = await response.json();
+      return ingredient;
+    } catch (error) {
+      console.error(`Error fetching ingredient ${id}:`, error);
+      return null;
+    }
+  },
+};
 
 export default IngredientService;

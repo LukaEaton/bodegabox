@@ -1,50 +1,65 @@
 package ingredients
 
 import (
+	"database/sql"
 	"errors"
 )
 
-// Service defines business logic for managing ingredients.
 type Service struct {
-	data map[int]Ingredient // in-memory store for simplicity
-	next int                // auto-incrementing ID
+	db *sql.DB
 }
 
-// NewService creates a new ingredient service.
-func NewService() *Service {
+func NewService(db *sql.DB) *Service {
 	return &Service{
-		data: make(map[int]Ingredient),
-		next: 1,
+		db: db,
 	}
 }
 
-// GetAll returns all ingredients.
-func (s *Service) GetAll() []Ingredient {
-	ingredients := make([]Ingredient, 0, len(s.data))
-	for _, ing := range s.data {
+// GetAll returns all ingredients from the database.
+func (s *Service) GetAll() ([]Ingredient, error) {
+	rows, err := s.db.Query(`SELECT id, name, category_id, store_id FROM ingredients`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var ingredients []Ingredient
+	for rows.Next() {
+		var ing Ingredient
+		if err := rows.Scan(&ing.ID, &ing.Name, &ing.CategoryID, &ing.StoreID); err != nil {
+			return nil, err
+		}
 		ingredients = append(ingredients, ing)
 	}
-	return ingredients
+	return ingredients, rows.Err()
 }
 
-// GetByID returns a single ingredient by ID.
+// GetByID returns a single ingredient by ID from the database.
 func (s *Service) GetByID(id int) (Ingredient, error) {
-	ing, ok := s.data[id]
-	if !ok {
+	var ing Ingredient
+	err := s.db.QueryRow(
+		`SELECT id, name, category_id, store_id FROM ingredients WHERE id = $1`, id,
+	).Scan(&ing.ID, &ing.Name, &ing.CategoryID, &ing.StoreID)
+	if err == sql.ErrNoRows {
 		return Ingredient{}, errors.New("ingredient not found")
 	}
-	return ing, nil
+	return ing, err
 }
 
-// Create adds a new ingredient.
-func (s *Service) Create(name string, categoryID, storeID int) Ingredient {
-	ing := Ingredient{
-		ID:         s.next,
+// Create adds a new ingredient to the database.
+func (s *Service) Create(name string, categoryID, storeID int) (Ingredient, error) {
+	var id int
+	err := s.db.QueryRow(
+		`INSERT INTO ingredients (name, category_id, store_id) VALUES ($1, $2, $3) RETURNING id`,
+		name, categoryID, storeID,
+	).Scan(&id)
+	if err != nil {
+		return Ingredient{}, err
+	}
+	return Ingredient{
+		ID:         id,
 		Name:       name,
 		CategoryID: categoryID,
 		StoreID:    storeID,
-	}
-	s.data[s.next] = ing
-	s.next++
-	return ing
+	}, nil
 }

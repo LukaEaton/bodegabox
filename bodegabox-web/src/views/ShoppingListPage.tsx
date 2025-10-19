@@ -11,7 +11,7 @@ export function ShoppingListPage() {
 	const [expandAll, setExpandAll] = useState<boolean | null>(true);
 	const [stores, setStores] = useState<Array<{ value: number | null; label: string }>>([]);
 	const [selectedStore, setSelectedStore] = useState<number | null>(null);
-	const [categories, setCategories] = useState<Array<{ id: number; name: string }>>([]);
+	const [categories, setCategories] = useState<Array<{ id: number | null; name: string }>>([]);
 	const [allIngredients, setAllIngredients] = useState<Array<{
 		id: number;
 		name: string;
@@ -37,7 +37,7 @@ export function ShoppingListPage() {
 			setStores([{ value: null, label: "Select Store..." }, ...storesList])
 		);
 
-		CategoryService.fetchStores().then(categoriesList =>
+		CategoryService.fetchCategories().then(categoriesList =>
 			setCategories(categoriesList)
 		);
 

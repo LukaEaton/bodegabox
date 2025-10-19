@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    container_name: bodegabox-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - bodegabox-data:/var/lib/postgresql/data
+      - ./bodegabox-rest/internal:/docker-entrypoint-initdb.d
+    ports:
+      - "${DB_PORT}:5432"
+
+  backend:
+    build:
+      context: ./bodegabox-rest
+      dockerfile: Dockerfile
+    container_name: bodegabox-rest
+    depends_on:
+      - db
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_NAME: ${POSTGRES_DB}
+    ports:
+      - "${BACKEND_PORT}:8080"
+
+  frontend:
+    build:
+      context: ./bodegabox-web
+      dockerfile: Dockerfile
+    container_name: bodegabox-web
+    depends_on:
+      - backend
+    ports:
+      - "${FRONTEND_PORT}:3000"
+    environment:
+      - NODE_ENV=production
+
+volumes:
+  bodegabox-data:
