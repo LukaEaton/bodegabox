@@ -2,7 +2,9 @@ version: "3.9"
 
 services:
   db:
-    image: postgres:16
+    build:
+      context: ./bodegabox-db
+      dockerfile: Dockerfile
     container_name: bodegabox-db
     restart: unless-stopped
     environment:
@@ -11,9 +13,14 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - bodegabox-data:/var/lib/postgresql/data
-      - ./bodegabox-rest/internal:/docker-entrypoint-initdb.d
+      - ./bodegabox-db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     ports:
       - "${DB_PORT}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backend:
     build:
@@ -23,7 +30,7 @@ services:
     depends_on:
       - db
     environment:
-      DB_HOST: ${DB_HOST}
+      DB_HOST: db
       DB_PORT: ${DB_PORT}
       DB_USER: ${POSTGRES_USER}
       DB_PASSWORD: ${POSTGRES_PASSWORD}
