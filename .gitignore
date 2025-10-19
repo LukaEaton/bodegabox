@@ -1,0 +1,83 @@
+# =====================
+# OS Files
+# =====================
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+*.swp
+
+# =====================
+# Go Backend
+# =====================
+# Build outputs
+/tmp/
+tmp/
+*.exe
+*.exe~
+*.out
+*.test
+*.dll
+*.so
+*.dylib
+*.log
+
+# Dependency directories
+vendor/
+pkg/mod/
+
+# Air
+air_errors.log
+/tmpmain
+
+# =====================
+# Frontend (React / Vite)
+# =====================
+# Node modules
+/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build output
+/dist/
+/build/
+
+# =====================
+# Docker
+# =====================
+# Ignore other Docker artifacts, keep env and override
+*.env.*    # Ignore other env variants
+!*.env     # Keep main .env
+# docker-compose.override.yml is intentionally tracked
+
+# =====================
+# IDE / Editor
+# =====================
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# =====================
+# Misc
+# =====================
+# Test coverage
+coverage.out
+*.prof
+
+# Temporary files
+*.tmp
+*.bak
+*.backup

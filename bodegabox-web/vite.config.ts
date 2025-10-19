@@ -5,4 +5,9 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [svgr(), react(), vanillaExtractPlugin()],
+  server: {
+    port: 3000,
+    strictPort: true,
+    host: true
+  }
 });
