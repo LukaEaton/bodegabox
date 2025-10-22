@@ -11,7 +11,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - bodegabox-data:/var/lib/postgresql/data
-      - ./bodegabox-db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./bodegabox-db/init-scripts:/docker-entrypoint-initdb.d:ro
     ports:
       - "${DB_PORT}:5432"
     healthcheck:
