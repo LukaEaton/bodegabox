@@ -31,8 +31,8 @@ export function ShoppingListPage() {
 			setAllIngredients(ingredients)
 		);
 
-		StoreService.fetchStores().then(storesList =>
-			storesList.map(store => ({ value: store.id, label: store.name }))
+		StoreService.getStores().then(storesList =>
+			storesList?.map(store => ({ value: store.id, label: store.name }))
 		).then(storesList =>
 			setStores([{ value: null, label: "Select Store..." }, ...storesList])
 		);

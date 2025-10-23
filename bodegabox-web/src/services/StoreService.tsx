@@ -1,21 +1,22 @@
+import { apiRequest } from "./RequestService";
+
 export interface Store {
   id: number;
   name: string;
 }
 
-const StoreService = {
-    async fetchStores(): Promise<Store[]> {
-        // TODO: Fetch stores from backend
-		const storesList = [
-			{ id: 1, name: "Walmart" },
-			{ id: 2, name: "Target" },
-			{ id: 3, name: "Whole Foods" }
-		];
-        // Simulate network delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        return storesList;
-    }
+const apiBaseUrl = import.meta.env.VITE_API_URL;
 
+const StoreService = {
+    async getStores(): Promise<Store[]> {
+        try {
+            const stores = await apiRequest<Store[]>(`${apiBaseUrl}/stores/`);
+            return stores;
+        } catch (error) {
+            console.error("Error fetching stores:", error);
+            return [];
+        }
+    }
 }
 
 export default StoreService;
