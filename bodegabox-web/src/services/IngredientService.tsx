@@ -13,8 +13,7 @@ const apiBaseUrl = import.meta.env.VITE_API_URL;
 const IngredientService = {
   async getIngredients(): Promise<Ingredient[]> {
     try {
-        const data = await apiRequest<Ingredient[]>(`${apiBaseUrl}/ingredients/`);
-        console.log("Fetched ingredients:", data);
+        const data = await apiRequest<Ingredient[]>(`${apiBaseUrl}/ingredients/saved/`);
         return data;
     } catch (error) {
         console.error("Error fetching ingredients:", error);

@@ -8,6 +8,7 @@ import (
 	"bodegabox-rest/middleware"
 	"bodegabox-rest/internal/ingredients"
 	"bodegabox-rest/internal/categories"
+	"bodegabox-rest/internal/stores"
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 )
@@ -48,6 +49,8 @@ func main() {
 	ingredients.RegisterRoutes(r.Group("/ingredients"), ingredientService)
 	categoryService := categories.NewService(db)
 	categories.RegisterRoutes(r.Group("/categories"), categoryService)
+	storeService := stores.NewService(db)
+	stores.RegisterRoutes(r.Group("/stores"), storeService)
 
 	port := os.Getenv("BACKEND_PORT")
 	if port == "" {
