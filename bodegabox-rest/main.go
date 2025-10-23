@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"log"
 	"os"
-
 	"bodegabox-rest/internal/ingredients"
+	"bodegabox-rest/internal/categories"
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 )
@@ -28,7 +28,6 @@ func main() {
 		dbHost, dbPort, dbUser, dbPass, dbName,
 	)
 
-	// Connect to the database
 	db, err := sql.Open("postgres", dsn)
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
@@ -41,14 +40,13 @@ func main() {
 
 	log.Println("✅ Connected to PostgreSQL database successfully")
 
-	// Create Gin router
 	r := gin.Default()
 
-	// Wire up service and handler
-	service := ingredients.NewService(db) // your service must use *sql.DB internally
-	ingredients.RegisterRoutes(r.Group("/ingredients"), service)
+	ingredientService := ingredients.NewService(db)
+	ingredients.RegisterRoutes(r.Group("/ingredients"), ingredientService)
+	categoryService := categories.NewService(db)
+	categories.RegisterRoutes(r.Group("/categories"), categoryService)
 
-	// Use backend port from environment or default to 8080
 	port := os.Getenv("BACKEND_PORT")
 	if port == "" {
 		port = "8080"
