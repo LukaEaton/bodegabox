@@ -27,7 +27,7 @@ export function ShoppingListPage() {
 
 	useEffect(() => {
 		
-		IngredientService.fetchIngredients().then(ingredients =>
+		IngredientService.getIngredients().then(ingredients =>
 			setAllIngredients(ingredients)
 		);
 
@@ -37,14 +37,14 @@ export function ShoppingListPage() {
 			setStores([{ value: null, label: "Select Store..." }, ...storesList])
 		);
 
-		CategoryService.fetchCategories().then(categoriesList =>
+		CategoryService.getCategories().then(categoriesList =>
 			setCategories(categoriesList)
 		);
 
 	}, []);
 
 	useEffect(() => {
-		setFilteredIngredients(allIngredients.filter(ingredient =>
+		setFilteredIngredients(allIngredients?.filter(ingredient =>
 			selectedStore ? ingredient.storeId == selectedStore : true
 		));
 	}, [selectedStore, allIngredients]);
@@ -81,18 +81,18 @@ export function ShoppingListPage() {
 				/>
 			</div>
 			<div style={{ marginTop: "20px" }}>
-				<PullToRefresh onRefresh={() => IngredientService.fetchIngredients().then(ingredients =>
+				<PullToRefresh onRefresh={() => IngredientService.getIngredients().then(ingredients =>
 					setAllIngredients(ingredients)
 				)}>
 					{categories.map(category => {
-						const categoryIngredients = filteredIngredients.filter(
+						const categoryIngredients = filteredIngredients?.filter(
 							ingredient => ingredient.categoryId == category.id
 						);
 						return (
 							<Accordion key={category.id} title={category.name}
 								forceExpand={expandAll}>
 								<ul style={{ margin: 0, paddingLeft: "45px" }}>
-									{categoryIngredients.map(ingredient => (
+									{categoryIngredients?.map(ingredient => (
 										<li 
 											style={{ 
 												listStyleType: "none"

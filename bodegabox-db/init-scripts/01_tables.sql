@@ -11,8 +11,8 @@ CREATE TABLE IF NOT EXISTS stores (
 CREATE TABLE IF NOT EXISTS ingredients (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
-    category_id INT FOREIGN KEY REFERENCES categories(id),
-    store_id INT FOREIGN KEY REFERENCES stores(id)
+    category_id INT REFERENCES categories(id),
+    store_id INT REFERENCES stores(id)
 );
 
 CREATE TABLE IF NOT EXISTS saved_ingredients (
