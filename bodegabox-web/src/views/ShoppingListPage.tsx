@@ -5,10 +5,14 @@ import PullToRefresh from "../components/PullToRefresh";
 import IngredientService from "../services/IngredientService";
 import StoreService from "../services/StoreService";
 import CategoryService from "../services/CategoryService";
+import FloatingButton from "../components/FloatingButton";
+import { FaPlus } from "react-icons/fa";
+import AddIngredientModal from "../components/AddIngredientModal";
 
 export function ShoppingListPage() {
 
 	const [expandAll, setExpandAll] = useState<boolean | null>(true);
+	const [addIngredientModalOpen, setAddIngredientModalOpen] = useState<boolean>(false);
 	const [stores, setStores] = useState<Array<{ value: number | null; label: string }>>([]);
 	const [selectedStore, setSelectedStore] = useState<number | null>(null);
 	const [categories, setCategories] = useState<Array<{ id: number | null; name: string }>>([]);
@@ -106,6 +110,14 @@ export function ShoppingListPage() {
 					})}
 				</PullToRefresh>
             </div>
+			<FloatingButton onClick={() => setAddIngredientModalOpen(true)}>
+				<FaPlus size={24} />
+			</FloatingButton>
+			<AddIngredientModal 
+				isOpen={addIngredientModalOpen}
+				onClose={() => setAddIngredientModalOpen(false)}
+				onAdd={ingredient => console.log("Added ingredient:", ingredient)} 
+			/>
 		</>
 	);
 }

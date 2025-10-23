@@ -3,7 +3,6 @@ package ingredients
 import (
 	"net/http"
 	"strconv"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,6 +16,16 @@ func RegisterRoutes(rg *gin.RouterGroup, service *Service) {
 			return
 		}
 		c.JSON(http.StatusOK, ingredients)
+	})
+
+	// GET /ingredients/saved
+	rg.GET("/saved", func(c *gin.Context) {
+		savedIngredients, err := service.GetAllSaved()
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch saved ingredients"})
+			return
+		}
+		c.JSON(http.StatusOK, savedIngredients)
 	})
 
 	// GET /ingredients/:id

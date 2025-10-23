@@ -34,6 +34,24 @@ func (s *Service) GetAll() ([]Ingredient, error) {
 	return ingredients, rows.Err()
 }
 
+func (s *Service) GetAllSaved() ([]SavedIngredient, error) {
+	rows, err := s.db.Query(`SELECT i.id, i.name, i.category_id, i.store_id, si.description, si.valid FROM ingredients i LEFT JOIN saved_ingredients si ON i.id = si.ingredient_id`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var savedIngredients []SavedIngredient
+	for rows.Next() {
+		var si SavedIngredient
+		if err := rows.Scan(&si.ID, &si.Name, &si.CategoryID, &si.StoreID, &si.Description, &si.Valid); err != nil {
+			return nil, err
+		}
+		savedIngredients = append(savedIngredients, si)
+	}
+	return savedIngredients, rows.Err()
+}
+
 // GetByID returns a single ingredient by ID from the database.
 func (s *Service) GetByID(id int) (Ingredient, error) {
 	var ing Ingredient
