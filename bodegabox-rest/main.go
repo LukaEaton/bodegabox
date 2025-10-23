@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"bodegabox-rest/middleware"
 	"bodegabox-rest/internal/ingredients"
 	"bodegabox-rest/internal/categories"
 	"github.com/gin-gonic/gin"
@@ -41,6 +42,7 @@ func main() {
 	log.Println("✅ Connected to PostgreSQL database successfully")
 
 	r := gin.Default()
+	r.Use(middleware.CORSMiddleware())
 
 	ingredientService := ingredients.NewService(db)
 	ingredients.RegisterRoutes(r.Group("/ingredients"), ingredientService)

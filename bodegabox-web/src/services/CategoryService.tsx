@@ -1,24 +1,22 @@
+import { apiRequest } from "./RequestService";
+
 export interface Category {
   id: number | null;
   name: string;
 }
 
-const CategoryService = {
-    async fetchCategories(): Promise<Category[]> {
-        // TODO: Fetch categories from backend
-        const categoriesList = [
-            { id: 1, name: "🥬Produce" },
-            { id: 2, name: "🥛Dairy" },
-            { id: 3, name: "🥖Bakery" },
-            { id: 4, name: "🥩Meat" },
-            { id: 5, name: "🥤Beverages" },
-            { id: null, name: "Uncategorized" }
-        ];
-        // Simulate network delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        return categoriesList;
-    }
+const apiBaseUrl = import.meta.env.VITE_API_URL;
 
+const CategoryService = {
+    async getCategories(): Promise<Category[]> {
+        try {
+            const categories = await apiRequest<Category[]>(`${apiBaseUrl}/categories/`);
+            return categories;
+        } catch (error) {
+            console.error("Error fetching categories:", error);
+            return [];
+        }
+    }
 }
 
 export default CategoryService;
