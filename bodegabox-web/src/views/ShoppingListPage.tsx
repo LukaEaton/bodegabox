@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Accordion, DropdownSelect } from "../components";
 import { IngredientCard } from "../components/IngredientCard";
 import PullToRefresh from "../components/PullToRefresh";
-import IngredientService from "../services/IngredientService";
+import IngredientService, { Ingredient, PendingIngredient } from "../services/IngredientService";
 import StoreService from "../services/StoreService";
 import CategoryService from "../services/CategoryService";
 import FloatingButton from "../components/FloatingButton";
@@ -16,24 +16,25 @@ export function ShoppingListPage() {
 	const [stores, setStores] = useState<Array<{ value: number | null; label: string }>>([]);
 	const [selectedStore, setSelectedStore] = useState<number | null>(null);
 	const [categories, setCategories] = useState<Array<{ id: number | null; name: string }>>([]);
-	const [allIngredients, setAllIngredients] = useState<Array<{
-		id: number;
-		name: string;
-		categoryId: number;
-		storeId: number;
-	}>>([]);
-	const [filteredIngredients, setFilteredIngredients] = useState<Array<{
-		id: number;
-		name: string;
-		categoryId: number;
-		storeId: number;
-	}>>([]);
+	const [allIngredients, setAllIngredients] = useState<Ingredient[]>([]);
+	const [filteredIngredients, setFilteredIngredients] = useState<Ingredient[]>([]);
+
+	const getShoppingList = () => {
+		IngredientService.getSavedIngredients().then(ingredients =>
+			setAllIngredients(ingredients)
+		);
+	};
+
+	const handleAddIngredient = (ingredient: PendingIngredient) => {
+		IngredientService.addIngredient(ingredient).then(() => {
+			getShoppingList();
+			setAddIngredientModalOpen(false);
+		});	
+	};
 
 	useEffect(() => {
 		
-		IngredientService.getIngredients().then(ingredients =>
-			setAllIngredients(ingredients)
-		);
+		getShoppingList();
 
 		StoreService.getStores().then(storesList =>
 			storesList?.map(store => ({ value: store.id, label: store.name }))
@@ -81,13 +82,10 @@ export function ShoppingListPage() {
 					selectedBackgroundColor="#2e2e2eff"
 					fontColor="#FFFFFF"
 					borderColor="#555555"
-					className="store-dropdown"
 				/>
 			</div>
 			<div style={{ marginTop: "20px" }}>
-				<PullToRefresh onRefresh={() => IngredientService.getIngredients().then(ingredients =>
-					setAllIngredients(ingredients)
-				)}>
+				<PullToRefresh onRefresh={() => getShoppingList()}>
 					{categories.map(category => {
 						const categoryIngredients = filteredIngredients?.filter(
 							ingredient => ingredient.categoryId == category.id
@@ -116,7 +114,7 @@ export function ShoppingListPage() {
 			<AddIngredientModal 
 				isOpen={addIngredientModalOpen}
 				onClose={() => setAddIngredientModalOpen(false)}
-				onAdd={ingredient => console.log("Added ingredient:", ingredient)} 
+				onAdd={handleAddIngredient}
 			/>
 		</>
 	);

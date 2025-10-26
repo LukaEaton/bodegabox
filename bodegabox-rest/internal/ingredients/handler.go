@@ -1,6 +1,7 @@
 package ingredients
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 	"github.com/gin-gonic/gin"
@@ -12,6 +13,7 @@ func RegisterRoutes(rg *gin.RouterGroup, service *Service) {
 	rg.GET("/", func(c *gin.Context) {
 		ingredients, err := service.GetAll()
 		if err != nil {
+			log.Println(err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch ingredients"})
 			return
 		}
@@ -22,6 +24,7 @@ func RegisterRoutes(rg *gin.RouterGroup, service *Service) {
 	rg.GET("/saved", func(c *gin.Context) {
 		savedIngredients, err := service.GetAllSaved()
 		if err != nil {
+			log.Println(err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch saved ingredients"})
 			return
 		}
@@ -41,6 +44,41 @@ func RegisterRoutes(rg *gin.RouterGroup, service *Service) {
 			return
 		}
 		c.JSON(http.StatusOK, ing)
+	})
+
+	// Get /ingredients/search?q=<term>
+	rg.GET("/search", func(c *gin.Context) {
+		query := c.Query("q")
+		if query == "" {
+			log.Println("Search query is missing")
+			c.JSON(http.StatusBadRequest, gin.H{"error": "missing search query"})
+			return
+		}
+		results, err := service.SearchIngredients(query)
+		if err != nil {
+			log.Println(err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to search ingredients"})
+			return
+		}
+		c.JSON(http.StatusOK, results)
+	})
+
+	// POST /ingredients/addToList
+	rg.POST("/addToList", func(c *gin.Context) {
+		log.Println("CONTENT-TYPE:", c.GetHeader("Content-Type"))
+		var input PendingIngredient
+		if err := c.ShouldBindJSON(&input); err != nil {
+			log.Println(err)
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid input"})
+			return
+		}
+		ingredientId, _ := input.IngredientID.Int64()
+		err := service.AddToShoppingList(int(ingredientId), input.Description)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to add ingredient to shopping list"})
+			return
+		}
+		c.JSON(http.StatusCreated, nil)
 	})
 
 	// POST /ingredients/

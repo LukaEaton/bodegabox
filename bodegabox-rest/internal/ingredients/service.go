@@ -19,6 +19,9 @@ func NewService(db *sql.DB) *Service {
 func (s *Service) GetAll() ([]Ingredient, error) {
 	rows, err := s.db.Query(`SELECT id, name, category_id, store_id FROM ingredients`)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
 		return nil, err
 	}
 	defer rows.Close()
@@ -34,22 +37,29 @@ func (s *Service) GetAll() ([]Ingredient, error) {
 	return ingredients, rows.Err()
 }
 
+// GetAllSaved returns all saved ingredients from the shopping list.
 func (s *Service) GetAllSaved() ([]SavedIngredient, error) {
-	rows, err := s.db.Query(`SELECT i.id, i.name, i.category_id, i.store_id, si.description, si.valid FROM ingredients i LEFT JOIN saved_ingredients si ON i.id = si.ingredient_id`)
+	rows, err := s.db.Query(`SELECT i.id, i.name, i.category_id, i.store_id, si.description, si.valid FROM ingredients i JOIN saved_ingredients si ON i.id = si.ingredient_id`)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
 		return nil, err
 	}
 	defer rows.Close()
-
 	var savedIngredients []SavedIngredient
 	for rows.Next() {
 		var si SavedIngredient
-		if err := rows.Scan(&si.ID, &si.Name, &si.CategoryID, &si.StoreID, &si.Description, &si.Valid); err != nil {
+		var description sql.NullString
+		if err := rows.Scan(&si.ID, &si.Name, &si.CategoryID, &si.StoreID, &description, &si.Valid); err != nil {
 			return nil, err
+		}
+		if description.Valid {
+			si.Description = description.String
 		}
 		savedIngredients = append(savedIngredients, si)
 	}
-	return savedIngredients, rows.Err()
+	return savedIngredients, nil
 }
 
 // GetByID returns a single ingredient by ID from the database.
@@ -62,6 +72,40 @@ func (s *Service) GetByID(id int) (Ingredient, error) {
 		return Ingredient{}, errors.New("ingredient not found")
 	}
 	return ing, err
+}
+
+// Search for Ingredients by name.
+func (s *Service) SearchIngredients(query string) ([]Ingredient, error) {
+	rows, err := s.db.Query(`
+		SELECT id, name, category_id, store_id 
+		FROM ingredients 
+		WHERE name ILIKE '%' || $1 || '%'
+	`, query)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+		return nil, err
+	}
+	defer rows.Close()
+	var ingredients []Ingredient
+	for rows.Next() {
+		var ing Ingredient
+		if err := rows.Scan(&ing.ID, &ing.Name, &ing.CategoryID, &ing.StoreID); err != nil {
+			return nil, err
+		}
+		ingredients = append(ingredients, ing)
+	}
+	return ingredients, nil
+}
+
+// AddToShoppingList adds an ingredient to the shopping list.
+func (s *Service) AddToShoppingList(ingredientID int, description string) error {
+	_, err := s.db.Exec(
+		`INSERT INTO saved_ingredients (ingredient_id, description) VALUES ($1, $2)`,
+		ingredientID, 	description,
+	)
+	return err
 }
 
 // Create adds a new ingredient to the database.

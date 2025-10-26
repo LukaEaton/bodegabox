@@ -1,7 +1,7 @@
 import React, { useState, useRef, ReactNode, TouchEvent } from "react";
 
 interface PullToRefreshProps {
-  onRefresh: () => Promise<void>;
+  onRefresh: () => void | Promise<void>;
   children: ReactNode;
   threshold?: number;
   maxPull?: number;
