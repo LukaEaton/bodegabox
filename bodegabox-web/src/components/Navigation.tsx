@@ -1,5 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { FaList, FaPiggyBank } from 'react-icons/fa';
+import { FaBookOpen, FaGear } from "react-icons/fa6";
+import { GiMeal } from "react-icons/gi";
 
 export function Navigation() {
 
@@ -14,12 +17,29 @@ export function Navigation() {
         { id: 4, label: 'Settings', path: '/settings' }
     ];
 
+    const renderTabIcon = (label: string) => {
+        switch(label) {
+            case 'Shopping List':
+                return <FaList size={20}/>;
+            case 'Recipes':
+                return <FaBookOpen size={20}/>;
+            case 'Meal Plan':
+                return <GiMeal size={20}/>;
+            case 'Expenses':
+                return <FaPiggyBank size={20}/>;
+            case 'Settings':
+                return <FaGear size={20}/>;
+            default:
+                return null;
+        }
+    }
+
     const tabs = tabsData.map((tab) => (
         <button 
             key={tab.id} 
             className={activeTab === tab.id ? 'active' : ''} 
             onClick={() => { setActiveTab(tab.id); navigate(tab.path); }}
-        >{tab.label}</button>
+        >{renderTabIcon(tab.label)}</button>
     ));
 
     return (

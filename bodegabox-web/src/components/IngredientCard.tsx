@@ -1,12 +1,5 @@
 import { CheckMark, EditPencil } from "../assets";
-
-type Ingredient = {
-  id: number;
-  name: string;
-  categoryId: number;
-  storeId: number;
-  description?: string;
-};
+import { Ingredient } from "../services/IngredientService";
 
 export function IngredientCard({ ingredient }: { ingredient: Ingredient }) {
     return (

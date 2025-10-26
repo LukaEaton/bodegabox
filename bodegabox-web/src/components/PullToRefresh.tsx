@@ -40,9 +40,7 @@ const PullToRefresh: React.FC<PullToRefreshProps> = ({
     setPull(0);
   };
 
-  // Loader height scales proportionally
   const loaderHeight = refreshing ? 50 : pull * 0.4;
-  // Arrow rotation (0 to 180deg as pull goes from 0 to threshold)
   const arrowRotation = Math.min((pull / threshold) * 180, 180);
 
   return (
@@ -52,7 +50,6 @@ const PullToRefresh: React.FC<PullToRefreshProps> = ({
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Loader */}
       <div
         style={{
           height: loaderHeight,
@@ -86,7 +83,6 @@ const PullToRefresh: React.FC<PullToRefreshProps> = ({
         ) : null}
       </div>
 
-      {/* Content stays in place */}
       <div>{children}</div>
 
       <style>

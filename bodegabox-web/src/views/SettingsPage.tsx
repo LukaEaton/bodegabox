@@ -1,5 +1,5 @@
 export function SettingsPage() {
     return (
-        <div>settings</div>
+        <div className="tab">settings</div>
     );
 }

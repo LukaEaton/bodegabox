@@ -6,6 +6,7 @@ export interface Ingredient {
   categoryId: number;
   storeId: number;
   description?: string;
+  valid?: boolean;
 }
 
 export interface PendingIngredient {

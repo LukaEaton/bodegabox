@@ -4,9 +4,10 @@ type AccordionProps = {
   title: string;
   children: React.ReactNode;
   forceExpand?: boolean | null;
+  style? : React.CSSProperties;
 };
 
-export function Accordion({ title, children, forceExpand }: AccordionProps) {
+export function Accordion({ title, children, forceExpand, style }: AccordionProps) {
   const [open, setOpen] = useState(true);
 
   useEffect(() => {
@@ -16,7 +17,7 @@ export function Accordion({ title, children, forceExpand }: AccordionProps) {
   }, [forceExpand]);
 
   return (
-    <div style={{ marginBottom: "20px" }}>
+    <div style={style}>
       <div style={{ alignItems: "center", gap: "8px" }}>
         <button
             style={{
@@ -45,7 +46,7 @@ export function Accordion({ title, children, forceExpand }: AccordionProps) {
                     strokeLinejoin="round">
                 </path>
             </svg>
-            <h2 style={{ margin: "0px" }}>{title}</h2>
+            <h3 style={{ margin: "0px" }}>{title}</h3>
         </button>
       </div>
       {open && (

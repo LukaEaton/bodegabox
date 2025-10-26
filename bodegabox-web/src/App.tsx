@@ -5,7 +5,6 @@ import { ShoppingListPage, RecipesPage, ExpensesPage, SettingsPage, MealPlanPage
 export default function App() {
   return (
     <>
-      <Navigation />
       <Routes>
         <Route path="/list" element={<ShoppingListPage />} />
         <Route path="/recipes" element={<RecipesPage />} />
@@ -14,6 +13,7 @@ export default function App() {
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="*" element={<Navigate to="/list" replace />} />
       </Routes>
+      <Navigation />
     </>
   );
 }

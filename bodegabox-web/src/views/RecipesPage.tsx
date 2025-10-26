@@ -1,5 +1,5 @@
 export function RecipesPage() {
     return (
-        <div>recipes</div>
+        <div className="tab">recipes</div>
     );
 }

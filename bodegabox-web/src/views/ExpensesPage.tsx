@@ -1,5 +1,5 @@
 export function ExpensesPage() {
     return (
-        <div>expenses</div>
+        <div className="tab">expenses</div>
     );
 }

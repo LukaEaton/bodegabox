@@ -55,44 +55,46 @@ export function ShoppingListPage() {
 	}, [selectedStore, allIngredients]);
 
 	return (
-		<>
-			<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center",
-				margin: "10px"
-			 }}>
-				<h1 style={{ margin: "0px" }}>Shopping List</h1>
-				<button
-					style={{
-						padding: "5px 10px",
-						borderRadius: "5px",
-						height: "fit-content",
-						background: "transparent",
-					}}
-					onClick={() => setExpandAll(!expandAll)}
-				>
-					{expandAll ? "Collapse All" : "Expand All"}
-				</button>
+		<div className="tab">
+			<div style={{ position: "sticky", top: 0, zIndex: 10, backgroundColor: "#272727ff", padding: "10px 20px 15px 20px" }}>
+				<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center",
+					margin: "0px"
+				}}>
+					<h1 style={{ margin: "0px" }}>Shopping List</h1>
+					<button
+						style={{
+							padding: "5px 10px",
+							borderRadius: "5px",
+							height: "fit-content",
+							background: "transparent",
+						}}
+						onClick={() => setExpandAll(!expandAll)}
+					>
+						{expandAll ? "Collapse All" : "Expand All"}
+					</button>
+				</div>
+				<div style={{ marginTop: "10px" }}>
+					<DropdownSelect 
+						options={stores}
+						value={selectedStore}
+						onChange={setSelectedStore}
+						placeholder="Select Store..."
+						backgroundColor="#3A3A3A"
+						selectedBackgroundColor="#2e2e2eff"
+						fontColor="#FFFFFF"
+						borderColor="#555555"
+					/>
+				</div>
 			</div>
-			<div style={{ margin: "20px 5px" }}>
-				<DropdownSelect 
-					options={stores}
-					value={selectedStore}
-					onChange={setSelectedStore}
-					placeholder="Select Store..."
-					backgroundColor="#3A3A3A"
-					selectedBackgroundColor="#2e2e2eff"
-					fontColor="#FFFFFF"
-					borderColor="#555555"
-				/>
-			</div>
-			<div style={{ marginTop: "20px" }}>
+			<div style={{ flex: 1, overflowY: "auto", paddingTop: "10px", padding: "10px 10px" }}>
 				<PullToRefresh onRefresh={() => getShoppingList()}>
 					{categories.map(category => {
 						const categoryIngredients = filteredIngredients?.filter(
-							ingredient => ingredient.categoryId == category.id
+							ingredient => ingredient.categoryId == category.id && ingredient.valid
 						);
 						return (
 							<Accordion key={category.id} title={category.name}
-								forceExpand={expandAll}>
+								forceExpand={expandAll} style={{ marginBottom: "20px" }}>
 								<ul style={{ margin: 0, paddingLeft: "45px" }}>
 									{categoryIngredients?.map(ingredient => (
 										<li 
@@ -106,6 +108,27 @@ export function ShoppingListPage() {
 							</Accordion>
 						);
 					})}
+					<Accordion title="Uncategorized" forceExpand={expandAll} style={{ marginBottom: "20px" }}>
+						<ul style={{ margin: 0, paddingLeft: "45px" }}>
+							{filteredIngredients?.filter(ingredient => !ingredient.categoryId && ingredient.valid).map(ingredient => (
+								<li 
+									style={{ listStyleType: "none" }}
+									key={ingredient.id}
+								><IngredientCard ingredient={ingredient} /></li>
+							))}
+						</ul>
+					</Accordion>
+					<hr/>
+					<Accordion title="Recently Purchased" forceExpand={expandAll} style={{ paddingBottom: "0px" }}>
+						<ul style={{ margin: 0, paddingLeft: "45px" }}>
+							{filteredIngredients?.filter(ingredient => !ingredient.valid).map(ingredient => (
+								<li 
+									style={{ listStyleType: "none" }}
+									key={ingredient.id}
+								><IngredientCard ingredient={ingredient} /></li>
+							))}
+						</ul>
+					</Accordion>
 				</PullToRefresh>
             </div>
 			<FloatingButton onClick={() => setAddIngredientModalOpen(true)}>
@@ -116,6 +139,6 @@ export function ShoppingListPage() {
 				onClose={() => setAddIngredientModalOpen(false)}
 				onAdd={handleAddIngredient}
 			/>
-		</>
+		</div>
 	);
 }
