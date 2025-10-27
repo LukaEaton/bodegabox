@@ -5,7 +5,8 @@ import { PullToRefresh } from "./PullToRefresh";
 import { IngredientCard } from "./IngredientCard";
 import { Alert } from "./Alert";
 import { FloatingButton } from "./FloatingButton";
-import { AddIngredientModal } from "./AddIngredientModal";
+import { IngredientModal } from "./IngredientModal";
+import { Search } from "./Search";
 
 export { 
     Navigation, 
@@ -15,5 +16,6 @@ export {
     IngredientCard, 
     Alert, 
     FloatingButton, 
-    AddIngredientModal 
+    IngredientModal,
+    Search
 };

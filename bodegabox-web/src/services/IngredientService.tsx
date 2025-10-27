@@ -12,7 +12,7 @@ const IngredientService = {
     return await RequestService.apiRequest<Ingredient[]>(`${apiBaseUrl}/ingredients/search?q=${encodeURIComponent(query)}`);
   },
 
-  async addIngredient(ingredient: PendingIngredient) {
+  async addIngredientToList(ingredient: PendingIngredient) {
     await RequestService.apiRequest(`${apiBaseUrl}/ingredients/addToList`, {
         method: "POST",
         body: ingredient,
@@ -20,6 +20,14 @@ const IngredientService = {
             "Content-Type": "application/json",
         },
     });
+  },
+
+  async purchase(ingredientId: number) {
+    return await RequestService.apiRequest(`${apiBaseUrl}/ingredients/purchase?id=${encodeURIComponent(ingredientId)}`);
+  },
+
+  async revertPurchase(ingredientId: number) {
+    return await RequestService.apiRequest(`${apiBaseUrl}/ingredients/revertPurchase?id=${encodeURIComponent(ingredientId)}`);
   }
 };
 

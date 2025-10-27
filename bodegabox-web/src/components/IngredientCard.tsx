@@ -1,8 +1,16 @@
 import { Ingredient } from "../types";
 import { BsPencilSquare } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
+import { GrRevert } from "react-icons/gr";
 
-export function IngredientCard({ ingredient }: { ingredient: Ingredient }) {
+type IngredientCardProps = {
+    ingredient: Ingredient;
+    onEdit: (ingredient: Ingredient) => void;
+    onPurchase: (ingredientId: number) => void;
+    onRevertPurchase: (ingredientId: number) => void;
+};
+
+export function IngredientCard({ ingredient, onEdit, onPurchase, onRevertPurchase }: IngredientCardProps) {
     return (
         <div
             style={{
@@ -17,8 +25,14 @@ export function IngredientCard({ ingredient }: { ingredient: Ingredient }) {
             <h4 style={{ margin: "0px 3px" }}>{ingredient.name}</h4>
             <p style={{ margin: "0px 0px 0px 10px", color: "#9f9f9fff", fontStyle: "italic" }}>{ingredient.description}</p>
             <div style={{ marginLeft: "auto", display: "flex", gap: "10px", alignItems: "center" }}>
-                <BsPencilSquare style={{ cursor: "pointer" }} onClick={() => alert('edited')} />
-                <FaCheck style={{ cursor: "pointer" }} onClick={() => alert('bought')} />
+                { ingredient.valid ? 
+                    <>
+                        <BsPencilSquare style={{ cursor: "pointer" }} onClick={() => onEdit(ingredient)} />
+                        <FaCheck style={{ cursor: "pointer" }} onClick={() => onPurchase(ingredient.id)} />
+                    </>
+                    :
+                    <GrRevert style={{ cursor: "pointer" }} onClick={() => onRevertPurchase(ingredient.id)} />
+                }
             </div>
         </div>
     );

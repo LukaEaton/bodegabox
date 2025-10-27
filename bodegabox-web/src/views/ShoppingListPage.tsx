@@ -5,7 +5,7 @@ import {
 	PullToRefresh, 
 	IngredientCard, 
 	FloatingButton, 
-	AddIngredientModal 
+	IngredientModal 
 } from "../components";
 import { IngredientService, StoreService, CategoryService } from "../services";
 import { Ingredient, PendingIngredient } from "../types";
@@ -16,6 +16,7 @@ export function ShoppingListPage() {
 
 	const [expandAll, setExpandAll] = useState<boolean | null>(true);
 	const [addIngredientModalOpen, setAddIngredientModalOpen] = useState<boolean>(false);
+	const [editIngredient, setEditIngredient] = useState<Ingredient | null>(null);
 	const [stores, setStores] = useState<Array<{ value: number | null; label: string }>>([]);
 	const [selectedStore, setSelectedStore] = useState<number | null>(null);
 	const [categories, setCategories] = useState<Array<{ id: number | null; name: string }>>([]);
@@ -29,33 +30,56 @@ export function ShoppingListPage() {
 		);
 	};
 
+	const getStores = () => {
+		StoreService.getStores().then(storesList =>
+			storesList?.map(store => ({ value: store.id, label: store.name }))
+		).then(storesList =>
+			setStores([{ value: null, label: "Select Store..." }, ...storesList])
+		);
+	}
+
+	const getCategories = () => {
+		CategoryService.getCategories().then(categoriesList =>
+			setCategories(categoriesList)
+		);
+	}
+
 	const handleAddIngredient = (ingredient: PendingIngredient) => {
-		IngredientService.addIngredient(ingredient).then(() => {
+		IngredientService.addIngredientToList(ingredient).then(() => {
 			getShoppingList();
 			setAddIngredientModalOpen(false);
 		})
 		.catch(error => {
 			if ((error as any).status === 409) {
 				setAlert("Ingredient is already on the list!");
-				return;
+			}
+			else {
+				setAlert((error as any).message);
 			}
 		});	
 	};
 
+	const handleEditIngredient = (ingredient: PendingIngredient) => {
+		setAddIngredientModalOpen(false);
+		setEditIngredient(null);
+	}
+
+	const handlePurchaseIngredient = (ingredientId: number) => {
+		IngredientService.purchase(ingredientId).then(() => {
+			getShoppingList();
+		});
+	};
+
+	const handleRevertPurchaseIngredient = (ingredientId: number) => {
+		IngredientService.revertPurchase(ingredientId).then(() => {
+			getShoppingList();
+		});
+	};
+
 	useEffect(() => {
-		
 		getShoppingList();
-
-		StoreService.getStores().then(storesList =>
-			storesList?.map(store => ({ value: store.id, label: store.name }))
-		).then(storesList =>
-			setStores([{ value: null, label: "Select Store..." }, ...storesList])
-		);
-
-		CategoryService.getCategories().then(categoriesList =>
-			setCategories(categoriesList)
-		);
-
+		getStores();
+		getCategories();
 	}, []);
 
 	useEffect(() => {
@@ -112,7 +136,15 @@ export function ShoppingListPage() {
 												listStyleType: "none"
 											}}
 											key={ingredient.id}
-										><IngredientCard ingredient={ingredient} /></li>
+										><IngredientCard 
+											ingredient={ingredient}
+											onEdit={(ingredient) => {
+												setEditIngredient(ingredient);
+												setAddIngredientModalOpen(true);
+											}}
+											onPurchase={handlePurchaseIngredient}
+											onRevertPurchase={handleRevertPurchaseIngredient}
+										/></li>
 									))}
 								</ul>
 							</Accordion>
@@ -124,7 +156,15 @@ export function ShoppingListPage() {
 								<li 
 									style={{ listStyleType: "none" }}
 									key={ingredient.id}
-								><IngredientCard ingredient={ingredient} /></li>
+								><IngredientCard 
+									ingredient={ingredient}
+									onEdit={(ingredient) => {
+										setEditIngredient(ingredient);
+										setAddIngredientModalOpen(true);
+									}}
+									onPurchase={handlePurchaseIngredient}
+									onRevertPurchase={handleRevertPurchaseIngredient}
+								/></li>
 							))}
 						</ul>
 					</Accordion>
@@ -135,7 +175,15 @@ export function ShoppingListPage() {
 								<li 
 									style={{ listStyleType: "none" }}
 									key={ingredient.id}
-								><IngredientCard ingredient={ingredient} /></li>
+								><IngredientCard 
+									ingredient={ingredient}
+									onEdit={(ingredient) => {
+										setEditIngredient(ingredient);
+										setAddIngredientModalOpen(true);
+									}}
+									onPurchase={handlePurchaseIngredient}
+									onRevertPurchase={handleRevertPurchaseIngredient}
+								/></li>
 							))}
 						</ul>
 					</Accordion>
@@ -144,10 +192,12 @@ export function ShoppingListPage() {
 			<FloatingButton onClick={() => setAddIngredientModalOpen(true)}>
 				<FaPlus size={24} />
 			</FloatingButton>
-			<AddIngredientModal 
+			<IngredientModal 
 				isOpen={addIngredientModalOpen}
-				onClose={() => setAddIngredientModalOpen(false)}
+				onClose={() => {setAddIngredientModalOpen(false); setEditIngredient(null);}}
+				ingredient={editIngredient}
 				onAdd={handleAddIngredient}
+				onEdit={handleEditIngredient}
 			/>
 		</div>
 	);

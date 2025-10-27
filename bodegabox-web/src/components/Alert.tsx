@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { FaTimes } from "react-icons/fa";
 
 type AlertProps = {
   message: string;
@@ -19,14 +20,14 @@ export function Alert({ message, type, onClose }: AlertProps) {
         }
         return p - 2;
       });
-    }, 80); // ~4 seconds
+    }, 80);
     return () => clearInterval(interval);
   }, [onClose]);
 
   const backgroundColors = {
-    Success: "#2ecc71", // green
-    Error: "#e74c3c",   // red
-    Warning: "#f1c40f", // yellow
+    Success: "#2ecc71",
+    Error: "#e74c3c",
+    Warning: "#f1c40f",
   };
 
   return (
@@ -50,9 +51,9 @@ export function Alert({ message, type, onClose }: AlertProps) {
         transition: "opacity 0.3s ease, transform 0.3s ease",
       }}
     >
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "10px" }}>
         <span style={{ fontWeight: 500 }}>{message}</span>
-        <button
+        <FaTimes
           onClick={onClose}
           style={{
             background: "transparent",
@@ -63,9 +64,7 @@ export function Alert({ message, type, onClose }: AlertProps) {
             lineHeight: "16px",
             cursor: "pointer",
           }}
-        >
-          ×
-        </button>
+        />
       </div>
 
       <div
