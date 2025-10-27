@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
 import { FaCirclePlus } from "react-icons/fa6";
+import { BsPencilSquare } from "react-icons/bs";
 import { IngredientService } from "../services";
 import { Ingredient, PendingIngredient, Option } from "../types";
 import { Search } from ".";
@@ -42,8 +43,8 @@ export function IngredientModal({ isOpen, onClose, ingredient, onAdd, onEdit }: 
     try {
       const ingredients = await IngredientService.searchIngredients(input);
       return ingredients.map(ingredient => ({
-        id: ingredient.id,
-        value: ingredient.name,
+        value: ingredient.id,
+        label: ingredient.name,
       }));
     } catch (error) {
       console.error("Failed to Search for Ingredients:", error);
@@ -61,7 +62,7 @@ export function IngredientModal({ isOpen, onClose, ingredient, onAdd, onEdit }: 
     <div className="modal-overlay">
       <div className="modal-container">
         <div className="modal-header">
-          <h2 style={{margin: "0px"}}>Add Ingredient</h2>
+          <h2 style={{margin: "0px"}}>{ingredient ? "Edit" : "Add"} Ingredient</h2>
           <button 
             className="close-button" 
             onClick={() => {
@@ -102,10 +103,9 @@ export function IngredientModal({ isOpen, onClose, ingredient, onAdd, onEdit }: 
           {ingredient ? 
             <button 
               onClick={handleEdit}
-              className={`add-button ${!selected ? "disabled-button" : "enabled-button"}`}
-              disabled={!selected}
+              className="add-button enabled-button"
             >
-              <FaCirclePlus style={{ marginRight: "5px" }} />
+              <BsPencilSquare style={{ marginRight: "5px" }} />
               Edit
             </button>
             :

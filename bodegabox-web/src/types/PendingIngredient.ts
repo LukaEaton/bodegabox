@@ -1,4 +1,4 @@
 export interface PendingIngredient {
   ingredientId: number;
-  description: string;
+  description?: string;
 }

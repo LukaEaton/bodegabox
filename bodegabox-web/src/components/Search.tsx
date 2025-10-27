@@ -5,7 +5,7 @@ type SearchProps = {
     searchRef: React.RefObject<HTMLInputElement | null>;
     search: string;
     setSearch: (value: string) => void;
-    setSelected: (ingredient: any | null) => void;
+    setSelected: (selected: any | null) => void;
     searchMethod: (input: string) => Promise<Option[]>;
 };
 
@@ -44,7 +44,7 @@ export function Search({ searchRef, search, setSearch, setSelected, searchMethod
         <div style={{ position: "relative" }} ref={searchContainerRef}>
             <input
                 type="search"
-                placeholder="Search Ingredients..."
+                placeholder="Type to Search..."
                 value={search}
                 ref={searchRef}
                 onChange={(e) => {
@@ -64,10 +64,10 @@ export function Search({ searchRef, search, setSearch, setSelected, searchMethod
                     <ul>
                     {results.map((result) => (
                         <li 
-                            key={result.id} 
+                            key={result.value} 
                             onClick={() => {
                                 setSelected(result);
-                                setSearch(result.value);
+                                setSearch(result.label);
                                 setShowResults(false);
                             }}
                         >{result.value}</li>

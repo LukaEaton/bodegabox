@@ -8,7 +8,7 @@ import {
 	IngredientModal 
 } from "../components";
 import { IngredientService, StoreService, CategoryService } from "../services";
-import { Ingredient, PendingIngredient } from "../types";
+import { Ingredient, PendingIngredient, Option, Category } from "../types";
 import { FaPlus } from "react-icons/fa";
 import { useAlert } from "../context/AlertContext";
 
@@ -17,9 +17,9 @@ export function ShoppingListPage() {
 	const [expandAll, setExpandAll] = useState<boolean | null>(true);
 	const [addIngredientModalOpen, setAddIngredientModalOpen] = useState<boolean>(false);
 	const [editIngredient, setEditIngredient] = useState<Ingredient | null>(null);
-	const [stores, setStores] = useState<Array<{ value: number | null; label: string }>>([]);
+	const [stores, setStores] = useState<Option[]>([]);
 	const [selectedStore, setSelectedStore] = useState<number | null>(null);
-	const [categories, setCategories] = useState<Array<{ id: number | null; name: string }>>([]);
+	const [categories, setCategories] = useState<Category[]>([]);
 	const [allIngredients, setAllIngredients] = useState<Ingredient[]>([]);
 	const [filteredIngredients, setFilteredIngredients] = useState<Ingredient[]>([]);
 	const { setAlert } = useAlert();
@@ -31,12 +31,16 @@ export function ShoppingListPage() {
 	};
 
 	const getStores = () => {
-		StoreService.getStores().then(storesList =>
-			storesList?.map(store => ({ value: store.id, label: store.name }))
-		).then(storesList =>
-			setStores([{ value: null, label: "Select Store..." }, ...storesList])
-		);
-	}
+		StoreService.getStores()
+			.then(storesList => {
+				const options: Option[] = storesList?.map(store => ({
+					value: store.id,
+					label: store.name,
+				}));
+				setStores([ {value: null, label: "Select Store..."}, ...options]);
+			})
+			.catch(error => console.error(error));
+	};
 
 	const getCategories = () => {
 		CategoryService.getCategories().then(categoriesList =>

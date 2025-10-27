@@ -1,9 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-
-type Option = {
-  value: number | null;
-  label: string;
-};
+import { Option } from "../types";
 
 type DropdownSelectProps = {
   options: Option[];
