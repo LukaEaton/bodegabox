@@ -19,14 +19,11 @@ func NewService(db *sql.DB) *Service {
 func (s *Service) GetAll() ([]Ingredient, error) {
 	rows, err := s.db.Query(`SELECT id, name, category_id, store_id FROM ingredients`)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, nil
-		}
 		return nil, err
 	}
 	defer rows.Close()
 
-	var ingredients []Ingredient
+	ingredients := []Ingredient{}
 	for rows.Next() {
 		var ing Ingredient
 		if err := rows.Scan(&ing.ID, &ing.Name, &ing.CategoryID, &ing.StoreID); err != nil {
@@ -41,13 +38,10 @@ func (s *Service) GetAll() ([]Ingredient, error) {
 func (s *Service) GetAllSaved() ([]SavedIngredient, error) {
 	rows, err := s.db.Query(`SELECT i.id, i.name, i.category_id, i.store_id, si.description, si.valid FROM ingredients i JOIN saved_ingredients si ON i.id = si.ingredient_id`)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, nil
-		}
 		return nil, err
 	}
 	defer rows.Close()
-	var savedIngredients []SavedIngredient
+	savedIngredients := []SavedIngredient{}
 	for rows.Next() {
 		var si SavedIngredient
 		var description sql.NullString
@@ -82,13 +76,10 @@ func (s *Service) SearchIngredients(query string) ([]Ingredient, error) {
 		WHERE name ILIKE '%' || $1 || '%'
 	`, query)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, nil
-		}
 		return nil, err
 	}
 	defer rows.Close()
-	var ingredients []Ingredient
+	ingredients := []Ingredient{}
 	for rows.Next() {
 		var ing Ingredient
 		if err := rows.Scan(&ing.ID, &ing.Name, &ing.CategoryID, &ing.StoreID); err != nil {

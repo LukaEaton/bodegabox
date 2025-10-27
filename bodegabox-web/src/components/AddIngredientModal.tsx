@@ -40,11 +40,14 @@ export function AddIngredientModal({ isOpen, onClose, onAdd }: AddIngredientModa
       setResults([]);
       return;
     }
-    setLoading(true);
-    IngredientService.searchIngredients(search)
-    .then(data => setResults(data))
-    .catch(error => console.error("Error searching ingredients:", error))
-    .finally(() => setLoading(false));
+    const delayDebounce = setTimeout(() => {
+      setLoading(true);
+      IngredientService.searchIngredients(search)
+        .then(data => setResults(data))
+        .catch(error => console.error("Error searching ingredients:", error))
+        .finally(() => setLoading(false));
+    }, 300);
+    return () => clearTimeout(delayDebounce);
   }, [search]);
 
   if (!isOpen) return null;
