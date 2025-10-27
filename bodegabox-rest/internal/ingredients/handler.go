@@ -65,7 +65,6 @@ func RegisterRoutes(rg *gin.RouterGroup, service *Service) {
 
 	// POST /ingredients/addToList
 	rg.POST("/addToList", func(c *gin.Context) {
-		log.Println("CONTENT-TYPE:", c.GetHeader("Content-Type"))
 		var input PendingIngredient
 		if err := c.ShouldBindJSON(&input); err != nil {
 			log.Println(err)
@@ -73,7 +72,16 @@ func RegisterRoutes(rg *gin.RouterGroup, service *Service) {
 			return
 		}
 		ingredientId, _ := input.IngredientID.Int64()
-		err := service.AddToShoppingList(int(ingredientId), input.Description)
+		count, err := service.VerifySavedIngredientExists(int(ingredientId))
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to verify if ingredient is already on the shopping list"})
+			return
+		}
+		if count > 0 {
+			c.JSON(http.StatusConflict, gin.H{"error": "ingredient is already on the shopping list"})
+			return
+		}
+		err = service.AddToShoppingList(int(ingredientId), input.Description)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to add ingredient to shopping list"})
 			return

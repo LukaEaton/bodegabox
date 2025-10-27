@@ -49,9 +49,15 @@ export function AddIngredientModal({ isOpen, onClose, onAdd }: AddIngredientModa
 
   if (!isOpen) return null;
 
+  const clearFields = () => {
+    setSearch("");
+    setSelected(null);
+    setDescription("");
+  }
+
   const handleAdd = () => {
-    console.log("Adding ingredient:", { ingredientId: selected!.id, description: description.trim()});
     onAdd({ ingredientId: selected!.id, description: description.trim()})
+    clearFields();
   };
 
   return (
@@ -63,9 +69,7 @@ export function AddIngredientModal({ isOpen, onClose, onAdd }: AddIngredientModa
             className="close-button" 
             onClick={() => {
               onClose(); 
-              setSearch("");
-              setSelected(null);
-              setDescription("");
+              clearFields();
             }}
           ><FaTimes /></button>
         </div>

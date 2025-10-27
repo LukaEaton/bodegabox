@@ -108,6 +108,19 @@ func (s *Service) AddToShoppingList(ingredientID int, description string) error 
 	return err
 }
 
+func (s *Service) VerifySavedIngredientExists(ingredientID int) (int, error) {
+	var count int
+	err := s.db.QueryRow(`
+		SELECT COUNT(*) 
+		FROM saved_ingredients 
+		WHERE ingredient_id = $1 AND valid = TRUE
+	`, ingredientID).Scan(&count)
+	if err != nil {
+		return -1, err
+	}
+	return count, nil
+}
+
 // Create adds a new ingredient to the database.
 func (s *Service) Create(name string, categoryID, storeID int) (Ingredient, error) {
 	var id int

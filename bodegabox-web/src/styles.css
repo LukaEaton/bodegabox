@@ -185,3 +185,13 @@ nav button.active {
 .floating-results li:hover {
     background-color: #505050;
 }
+
+/* Alert Context Keyframes */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes shrink {
+  from { width: 100%; }
+  to { width: 0%; }
+}

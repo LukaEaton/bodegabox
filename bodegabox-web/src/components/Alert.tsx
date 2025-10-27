@@ -1,0 +1,84 @@
+import React, { useEffect, useState } from "react";
+
+interface AlertProps {
+  message: string;
+  type: "Success" | "Error" | "Warning";
+  onClose: () => void;
+}
+
+const Alert: React.FC<AlertProps> = ({ message, type, onClose }) => {
+  const [progress, setProgress] = useState(100);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProgress((p) => {
+        if (p <= 0) {
+          clearInterval(interval);
+          onClose();
+          return 0;
+        }
+        return p - 2;
+      });
+    }, 80); // ~4 seconds
+    return () => clearInterval(interval);
+  }, [onClose]);
+
+  const backgroundColors = {
+    Success: "#2ecc71", // green
+    Error: "#e74c3c",   // red
+    Warning: "#f1c40f", // yellow
+  };
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: "20px",
+        right: "20px",
+        backgroundColor: backgroundColors[type],
+        color: "#fff",
+        padding: "12px 18px",
+        borderRadius: "8px",
+        minWidth: "220px",
+        maxWidth: "300px",
+        boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
+        zIndex: 1000,
+        display: "flex",
+        flexDirection: "column",
+        gap: "6px",
+        fontSize: "14px",
+        transition: "opacity 0.3s ease, transform 0.3s ease",
+      }}
+    >
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <span style={{ fontWeight: 500 }}>{message}</span>
+        <button
+          onClick={onClose}
+          style={{
+            background: "transparent",
+            border: "none",
+            color: "#fff",
+            fontWeight: "bold",
+            fontSize: "16px",
+            lineHeight: "16px",
+            cursor: "pointer",
+          }}
+        >
+          ×
+        </button>
+      </div>
+
+      <div
+        style={{
+          height: "4px",
+          width: `${progress}%`,
+          backgroundColor: "rgba(255,255,255,0.7)",
+          borderRadius: "4px",
+          transition: "width 0.1s linear",
+        }}
+      />
+    </div>
+  );
+};
+
+export default Alert;

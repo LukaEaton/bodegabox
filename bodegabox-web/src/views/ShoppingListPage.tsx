@@ -8,6 +8,7 @@ import CategoryService from "../services/CategoryService";
 import FloatingButton from "../components/FloatingButton";
 import { FaPlus } from "react-icons/fa";
 import AddIngredientModal from "../components/AddIngredientModal";
+import { useAlert } from "../context/AlertContext";
 
 export function ShoppingListPage() {
 
@@ -18,6 +19,7 @@ export function ShoppingListPage() {
 	const [categories, setCategories] = useState<Array<{ id: number | null; name: string }>>([]);
 	const [allIngredients, setAllIngredients] = useState<Ingredient[]>([]);
 	const [filteredIngredients, setFilteredIngredients] = useState<Ingredient[]>([]);
+	const { setAlert } = useAlert();
 
 	const getShoppingList = () => {
 		IngredientService.getSavedIngredients().then(ingredients =>
@@ -29,6 +31,12 @@ export function ShoppingListPage() {
 		IngredientService.addIngredient(ingredient).then(() => {
 			getShoppingList();
 			setAddIngredientModalOpen(false);
+		})
+		.catch(error => {
+			if ((error as any).status === 409) {
+				setAlert("Ingredient is already on the list!");
+				return;
+			}
 		});	
 	};
 

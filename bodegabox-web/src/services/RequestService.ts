@@ -22,8 +22,9 @@ export async function apiRequest<TResponse = any, TBody = any>(
   });
 
   if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`HTTP ${response.status}: ${errorText}`);
+    const err = new Error("Request failed");
+    (err as any).status = response.status;
+    throw err;
   }
 
   return response.json();

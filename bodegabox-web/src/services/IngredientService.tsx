@@ -18,38 +18,21 @@ const apiBaseUrl = import.meta.env.VITE_API_URL;
 
 const IngredientService = {
   async getSavedIngredients(): Promise<Ingredient[]> {
-    try {
-        const data = await apiRequest<Ingredient[]>(`${apiBaseUrl}/ingredients/saved`);
-        return data;
-    } catch (error) {
-        console.error("Error fetching ingredients:", error);
-        return [];
-    }
+    return await apiRequest<Ingredient[]>(`${apiBaseUrl}/ingredients/saved`);
   },
 
   async searchIngredients(query: string): Promise<Ingredient[]> {
-    try {
-        const data = await apiRequest<Ingredient[]>(`${apiBaseUrl}/ingredients/search?q=${encodeURIComponent(query)}`);
-        return data;
-    } catch (error) {
-        console.error("Error searching ingredients:", error);
-        return [];
-    }
+    return await apiRequest<Ingredient[]>(`${apiBaseUrl}/ingredients/search?q=${encodeURIComponent(query)}`);
   },
 
   async addIngredient(ingredient: PendingIngredient) {
-    try {
-        await apiRequest(`${apiBaseUrl}/ingredients/addToList`, {
-            method: "POST",
-            body: ingredient,
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
-    }
-    catch (error) {
-        console.error("Error adding ingredient:", error);
-    }
+    await apiRequest(`${apiBaseUrl}/ingredients/addToList`, {
+        method: "POST",
+        body: ingredient,
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
   }
 };
 
