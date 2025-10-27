@@ -1,8 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { FaList, FaPiggyBank } from 'react-icons/fa';
+import { FaList, FaPiggyBank, FaUtensils } from 'react-icons/fa';
 import { FaBookOpen, FaGear } from "react-icons/fa6";
-import { GiMeal } from "react-icons/gi";
 
 export function Navigation() {
 
@@ -24,7 +23,7 @@ export function Navigation() {
             case 'Recipes':
                 return <FaBookOpen size={20}/>;
             case 'Meal Plan':
-                return <GiMeal size={20}/>;
+                return <FaUtensils size={20}/>;
             case 'Expenses':
                 return <FaPiggyBank size={20}/>;
             case 'Settings':
