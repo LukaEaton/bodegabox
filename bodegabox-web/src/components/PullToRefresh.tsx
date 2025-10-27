@@ -1,18 +1,13 @@
-import React, { useState, useRef, ReactNode, TouchEvent } from "react";
+import { useState, useRef, ReactNode, TouchEvent } from "react";
 
-interface PullToRefreshProps {
+type PullToRefreshProps = {
   onRefresh: () => void | Promise<void>;
   children: ReactNode;
   threshold?: number;
   maxPull?: number;
 }
 
-const PullToRefresh: React.FC<PullToRefreshProps> = ({
-  onRefresh,
-  children,
-  threshold = 100,
-  maxPull = 150,
-}) => {
+export function PullToRefresh({onRefresh,children,threshold = 100,maxPull = 150,}: PullToRefreshProps) {
   const [pull, setPull] = useState<number>(0);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const startY = useRef<number>(0);
@@ -96,5 +91,3 @@ const PullToRefresh: React.FC<PullToRefreshProps> = ({
     </div>
   );
 };
-
-export default PullToRefresh;

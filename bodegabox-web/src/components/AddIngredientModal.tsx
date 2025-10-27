@@ -1,9 +1,10 @@
 import { useRef, useState, useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
 import { FaCirclePlus } from "react-icons/fa6";
-import IngredientService, { Ingredient, PendingIngredient } from "../services/IngredientService";
+import { IngredientService } from "../services";
+import { Ingredient, PendingIngredient } from "../types";
 
-interface AddIngredientModalProps {
+type AddIngredientModalProps = {
   isOpen: boolean;
   onClose: () => void;
   onAdd: (ingredient: PendingIngredient) => void;

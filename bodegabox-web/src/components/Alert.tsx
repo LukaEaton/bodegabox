@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-interface AlertProps {
+type AlertProps = {
   message: string;
   type: "Success" | "Error" | "Warning";
   onClose: () => void;
 }
 
-const Alert: React.FC<AlertProps> = ({ message, type, onClose }) => {
+export function Alert({ message, type, onClose }: AlertProps) {
   const [progress, setProgress] = useState(100);
 
   useEffect(() => {
@@ -80,5 +80,3 @@ const Alert: React.FC<AlertProps> = ({ message, type, onClose }) => {
     </div>
   );
 };
-
-export default Alert;

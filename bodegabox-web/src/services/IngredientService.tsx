@@ -1,32 +1,19 @@
-import { apiRequest } from "./RequestService";
-
-export interface Ingredient {
-  id: number;
-  name: string;
-  categoryId: number;
-  storeId: number;
-  description?: string;
-  valid?: boolean;
-}
-
-export interface PendingIngredient {
-  ingredientId: number;
-  description: string;
-}
+import { RequestService } from "../services";
+import { Ingredient, PendingIngredient } from "../types";
 
 const apiBaseUrl = import.meta.env.VITE_API_URL;
 
 const IngredientService = {
   async getSavedIngredients(): Promise<Ingredient[]> {
-    return await apiRequest<Ingredient[]>(`${apiBaseUrl}/ingredients/saved`);
+    return await RequestService.apiRequest<Ingredient[]>(`${apiBaseUrl}/ingredients/saved`);
   },
 
   async searchIngredients(query: string): Promise<Ingredient[]> {
-    return await apiRequest<Ingredient[]>(`${apiBaseUrl}/ingredients/search?q=${encodeURIComponent(query)}`);
+    return await RequestService.apiRequest<Ingredient[]>(`${apiBaseUrl}/ingredients/search?q=${encodeURIComponent(query)}`);
   },
 
   async addIngredient(ingredient: PendingIngredient) {
-    await apiRequest(`${apiBaseUrl}/ingredients/addToList`, {
+    await RequestService.apiRequest(`${apiBaseUrl}/ingredients/addToList`, {
         method: "POST",
         body: ingredient,
         headers: {

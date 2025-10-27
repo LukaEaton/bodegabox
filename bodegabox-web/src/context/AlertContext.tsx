@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
-import Alert from "../components/Alert";
+import { Alert } from "../components";
 
 type AlertType = "Success" | "Error" | "Warning";
 

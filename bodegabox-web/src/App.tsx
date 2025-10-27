@@ -1,7 +1,7 @@
 import { Navigation } from "./components/";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { ShoppingListPage, RecipesPage, ExpensesPage, SettingsPage, MealPlanPage } from "./views/";
-import { AlertProvider } from "./context/AlertContext";
+import { AlertProvider } from "./context";
 
 export default function App() {
   return (

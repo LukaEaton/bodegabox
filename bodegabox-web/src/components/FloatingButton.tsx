@@ -1,6 +1,6 @@
 import React from "react";
 
-interface FloatingButtonProps {
+type FloatingButtonProps = {
   onClick: () => void;
   children: React.ReactNode;
 }

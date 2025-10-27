@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import { Accordion, DropdownSelect } from "../components";
-import { IngredientCard } from "../components/IngredientCard";
-import PullToRefresh from "../components/PullToRefresh";
-import IngredientService, { Ingredient, PendingIngredient } from "../services/IngredientService";
-import StoreService from "../services/StoreService";
-import CategoryService from "../services/CategoryService";
-import FloatingButton from "../components/FloatingButton";
+import { 
+	Accordion, 
+	DropdownSelect, 
+	PullToRefresh, 
+	IngredientCard, 
+	FloatingButton, 
+	AddIngredientModal 
+} from "../components";
+import { IngredientService, StoreService, CategoryService } from "../services";
+import { Ingredient, PendingIngredient } from "../types";
 import { FaPlus } from "react-icons/fa";
-import AddIngredientModal from "../components/AddIngredientModal";
 import { useAlert } from "../context/AlertContext";
 
 export function ShoppingListPage() {
