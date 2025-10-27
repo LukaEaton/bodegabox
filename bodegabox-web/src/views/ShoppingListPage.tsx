@@ -5,7 +5,8 @@ import {
 	PullToRefresh, 
 	IngredientCard, 
 	FloatingButton, 
-	IngredientModal 
+	IngredientModal,
+	BodegaBoxLogo 
 } from "../components";
 import { IngredientService, StoreService, CategoryService } from "../services";
 import { Ingredient, PendingIngredient, Option, Category } from "../types";
@@ -108,24 +109,29 @@ export function ShoppingListPage() {
 
 	return (
 		<div className="tab">
-			<div style={{ position: "sticky", top: 0, zIndex: 10, backgroundColor: "#272727ff", padding: "10px 20px 15px 20px" }}>
+			<div style={{ position: "sticky", top: 0, zIndex: 10, backgroundColor: "#272727ff", padding: "15px 20px", borderBottom: "4px solid rgba(0, 226, 242, 0.4)" }}>
 				<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center",
 					margin: "0px"
 				}}>
-					<h1 style={{ margin: "0px" }}>Shopping List</h1>
+					<div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+						<BodegaBoxLogo />
+						<h2 style={{ margin: "0px" }}>Shopping List</h2>
+					</div>
 					<button
 						style={{
 							padding: "5px 10px",
 							borderRadius: "5px",
 							height: "fit-content",
-							background: "transparent",
+							background: "rgba(0, 226, 242, 0.4)",
 						}}
 						onClick={() => setExpandAll(!expandAll)}
 					>
 						{expandAll ? "Collapse All" : "Expand All"}
 					</button>
 				</div>
-				<div style={{ marginTop: "10px" }}>
+			</div>
+			<div style={{ flex: 1, overflowY: "auto", paddingTop: "10px", padding: "10px 10px" }}>
+				<div style={{ marginBottom: "10px" }}>
 					<DropdownSelect 
 						options={stores}
 						value={selectedStore}
@@ -137,8 +143,6 @@ export function ShoppingListPage() {
 						borderColor="#555555"
 					/>
 				</div>
-			</div>
-			<div style={{ flex: 1, overflowY: "auto", paddingTop: "10px", padding: "10px 10px" }}>
 				<PullToRefresh onRefresh={() => getShoppingList()}>
 					{categories.map(category => {
 						const categoryIngredients = filteredIngredients?.filter(

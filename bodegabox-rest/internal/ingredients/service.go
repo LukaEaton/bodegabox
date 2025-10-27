@@ -99,6 +99,7 @@ func (s *Service) AddToShoppingList(ingredientID int, description string) error 
 	return err
 }
 
+// EditShoppingList edits an ingredient's description on the list
 func (s *Service) EditShoppingList(ingredientID int, description string) error {
 	_, err := s.db.Exec(
 		`UPDATE saved_ingredients 
@@ -109,13 +110,37 @@ func (s *Service) EditShoppingList(ingredientID int, description string) error {
 	return err
 }
 
-func (s *Service) VerifySavedIngredientExists(ingredientID int) (int, error) {
+// InvalidateIngredient invalidates a list ingredient
+func (s *Service) InvalidateIngredient(ingredientID int) error {
+	_, err := s.db.Exec(
+		`UPDATE saved_ingredients 
+			SET valid = FALSE,
+				saved = CURRENT_TIMESTAMP
+			WHERE ingredient_id = $1`,
+		ingredientID,
+	)
+	return err
+}
+
+// ReValidateIngredient re-validates a list ingredient
+func (s *Service) ReValidateIngredient(ingredientID int) error {
+	_, err := s.db.Exec(
+		`UPDATE saved_ingredients 
+			SET valid = TRUE
+			WHERE ingredient_id = $1`,
+		ingredientID,
+	)
+	return err
+}
+
+// VerifySavedIngredientExists 
+func (s *Service) VerifySavedIngredientExists(ingredientID int, valid bool) (int, error) {
 	var count int
 	err := s.db.QueryRow(`
 		SELECT COUNT(*) 
 		FROM saved_ingredients 
-		WHERE ingredient_id = $1 AND valid = TRUE
-	`, ingredientID).Scan(&count)
+		WHERE ingredient_id = $1 AND valid = $2
+	`, ingredientID, valid).Scan(&count)
 	if err != nil {
 		return -1, err
 	}

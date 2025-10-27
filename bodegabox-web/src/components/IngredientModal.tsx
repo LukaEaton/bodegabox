@@ -58,6 +58,10 @@ export function IngredientModal({ isOpen, onClose, ingredient, onAdd, onEdit }: 
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    setDescription(ingredient ? ingredient.description ? ingredient.description : "" : "")
+  }, [ingredient]);
+
   return (
     <div className="modal-overlay">
       <div className="modal-container">

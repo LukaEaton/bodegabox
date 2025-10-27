@@ -17,14 +17,15 @@ export function IngredientCard({ ingredient, onEdit, onPurchase, onRevertPurchas
                 display: "flex",
                 alignItems: "center",
                 padding: "5px",
-                backgroundColor: "#00e2f215",
+                backgroundColor: "rgba(0, 226, 242, 0.1)",
                 margin: "5px 10px 5px 0px",
                 borderRadius: "5px",
+                gap: "10px"
             }}
         >
-            <h4 style={{ margin: "0px 3px" }}>{ingredient.name}</h4>
-            <p style={{ margin: "0px 0px 0px 10px", color: "#9f9f9fff", fontStyle: "italic" }}>{ingredient.description}</p>
-            <div style={{ marginLeft: "auto", display: "flex", gap: "10px", alignItems: "center" }}>
+            <h4 style={{ margin: "0px" }}>{ingredient.name}</h4>
+            <p style={{ margin: "0px", color: "#9f9f9fff", fontStyle: "italic" }}>{ingredient.description}</p>
+            <div style={{ marginLeft: "auto", display: "flex", gap: "10px", alignItems: "center", marginRight: "5px" }}>
                 { ingredient.valid ? 
                     <>
                         <BsPencilSquare style={{ cursor: "pointer" }} onClick={() => onEdit(ingredient)} />

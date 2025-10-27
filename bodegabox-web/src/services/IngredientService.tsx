@@ -33,11 +33,23 @@ const IngredientService = {
   },
 
   async purchase(ingredientId: number) {
-    return await RequestService.apiRequest(`${apiBaseUrl}/ingredients/purchase?id=${encodeURIComponent(ingredientId)}`);
+    await RequestService.apiRequest(`${apiBaseUrl}/ingredients/purchase`, {
+        method: "PUT",
+        body: ingredientId,
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
   },
 
   async revertPurchase(ingredientId: number) {
-    return await RequestService.apiRequest(`${apiBaseUrl}/ingredients/revertPurchase?id=${encodeURIComponent(ingredientId)}`);
+    await RequestService.apiRequest(`${apiBaseUrl}/ingredients/revertPurchase`, {
+        method: "PUT",
+        body: ingredientId,
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
   }
 };
 
