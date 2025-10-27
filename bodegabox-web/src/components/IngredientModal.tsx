@@ -20,7 +20,7 @@ export function IngredientModal({ isOpen, onClose, ingredient, onAdd, onEdit }: 
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [search, setSearch] = useState("");
-  const [selected, setSelected] = useState<Ingredient | null>(null);
+  const [selected, setSelected] = useState<number | null>(null);
   const [description, setDescription] = useState("");
 
   const clearFields = () => {
@@ -30,7 +30,7 @@ export function IngredientModal({ isOpen, onClose, ingredient, onAdd, onEdit }: 
   }
 
   const handleAdd = () => {
-    onAdd({ ingredientId: selected!.id, description: description.trim()})
+    onAdd({ ingredientId: selected!, description: description.trim()})
     clearFields();
   };
 

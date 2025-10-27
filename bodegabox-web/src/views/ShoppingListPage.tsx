@@ -52,10 +52,12 @@ export function ShoppingListPage() {
 		IngredientService.addIngredientToList(ingredient).then(() => {
 			getShoppingList();
 			setAddIngredientModalOpen(false);
+			setAlert("Ingredient Added!", "Success");
 		})
 		.catch(error => {
 			if ((error as any).status === 409) {
 				setAlert("Ingredient is already on the list!");
+				console.log((error as any).message);
 			}
 			else {
 				setAlert((error as any).message);
@@ -64,8 +66,20 @@ export function ShoppingListPage() {
 	};
 
 	const handleEditIngredient = (ingredient: PendingIngredient) => {
-		setAddIngredientModalOpen(false);
-		setEditIngredient(null);
+		IngredientService.editListIngredient(ingredient).then(() => {
+			getShoppingList();
+			setAddIngredientModalOpen(false);
+			setEditIngredient(null);
+			setAlert("Ingredient Edited!", "Success");
+		})
+		.catch(error => {
+			if ((error as any).status === 409) {
+				setAlert("Ingredient is purchased or not on the list!");
+			}
+			else {
+				setAlert((error as any).message);
+			}
+		});	
 	}
 
 	const handlePurchaseIngredient = (ingredientId: number) => {

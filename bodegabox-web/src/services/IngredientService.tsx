@@ -22,6 +22,16 @@ const IngredientService = {
     });
   },
 
+  async editListIngredient(ingredient: PendingIngredient) {
+    await RequestService.apiRequest(`${apiBaseUrl}/ingredients/editList`, {
+        method: "PUT",
+        body: ingredient,
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+  },
+
   async purchase(ingredientId: number) {
     return await RequestService.apiRequest(`${apiBaseUrl}/ingredients/purchase?id=${encodeURIComponent(ingredientId)}`);
   },

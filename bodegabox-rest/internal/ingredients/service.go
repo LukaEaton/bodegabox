@@ -99,6 +99,16 @@ func (s *Service) AddToShoppingList(ingredientID int, description string) error 
 	return err
 }
 
+func (s *Service) EditShoppingList(ingredientID int, description string) error {
+	_, err := s.db.Exec(
+		`UPDATE saved_ingredients 
+			SET description = $2
+			WHERE ingredient_id = $1`,
+		ingredientID, 	description,
+	)
+	return err
+}
+
 func (s *Service) VerifySavedIngredientExists(ingredientID int) (int, error) {
 	var count int
 	err := s.db.QueryRow(`

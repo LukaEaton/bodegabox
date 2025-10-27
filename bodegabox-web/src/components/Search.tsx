@@ -66,11 +66,11 @@ export function Search({ searchRef, search, setSearch, setSelected, searchMethod
                         <li 
                             key={result.value} 
                             onClick={() => {
-                                setSelected(result);
+                                setSelected(result.value);
                                 setSearch(result.label);
                                 setShowResults(false);
                             }}
-                        >{result.value}</li>
+                        >{result.label}</li>
                     ))}
                     </ul>
                 )}
