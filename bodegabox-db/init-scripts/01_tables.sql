@@ -18,6 +18,6 @@ CREATE TABLE IF NOT EXISTS ingredients (
 CREATE TABLE IF NOT EXISTS saved_ingredients (
     ingredient_id INT PRIMARY KEY REFERENCES ingredients(id),
     description TEXT,
-    valid BOOLEAN NOT NULL,
+    valid BOOLEAN NOT NULL DEFAULT TRUE,
     saved TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

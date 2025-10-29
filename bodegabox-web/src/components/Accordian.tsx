@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
+import { IoIosArrowForward } from "react-icons/io";
 
 type AccordionProps = {
   title: string;
   children: React.ReactNode;
   forceExpand?: boolean | null;
+  style? : React.CSSProperties;
 };
 
-export function Accordion({ title, children, forceExpand }: AccordionProps) {
+export function Accordion({ title, children, forceExpand, style }: AccordionProps) {
   const [open, setOpen] = useState(true);
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export function Accordion({ title, children, forceExpand }: AccordionProps) {
   }, [forceExpand]);
 
   return (
-    <div style={{ marginBottom: "20px" }}>
+    <div style={style}>
       <div style={{ alignItems: "center", gap: "8px" }}>
         <button
             style={{
@@ -32,20 +34,8 @@ export function Accordion({ title, children, forceExpand }: AccordionProps) {
             }}
             onClick={() => setOpen((o) => !o)}
         >
-            <svg 
-                style={open ? { transform: "rotate(90deg)" } : {}}
-                width={25} 
-                height={25} 
-                viewBox="0 0 24 24" 
-                fill="none"
-            >
-                <path 
-                    d="M10 7L15 12L10 17" stroke="#ffffff" 
-                    strokeWidth="1.5" strokeLinecap="round" 
-                    strokeLinejoin="round">
-                </path>
-            </svg>
-            <h2 style={{ margin: "0px" }}>{title}</h2>
+            <IoIosArrowForward style={open ? { transform: "rotate(90deg)"} : {}}/>
+            <h3 style={{ margin: "0px" }}>{title}</h3>
         </button>
       </div>
       {open && (

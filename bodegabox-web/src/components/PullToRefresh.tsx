@@ -1,18 +1,13 @@
-import React, { useState, useRef, ReactNode, TouchEvent } from "react";
+import { useState, useRef, ReactNode, TouchEvent } from "react";
 
-interface PullToRefreshProps {
-  onRefresh: () => Promise<void>;
+type PullToRefreshProps = {
+  onRefresh: () => void | Promise<void>;
   children: ReactNode;
   threshold?: number;
   maxPull?: number;
 }
 
-const PullToRefresh: React.FC<PullToRefreshProps> = ({
-  onRefresh,
-  children,
-  threshold = 100,
-  maxPull = 150,
-}) => {
+export function PullToRefresh({onRefresh,children,threshold = 100,maxPull = 150,}: PullToRefreshProps) {
   const [pull, setPull] = useState<number>(0);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const startY = useRef<number>(0);
@@ -40,9 +35,7 @@ const PullToRefresh: React.FC<PullToRefreshProps> = ({
     setPull(0);
   };
 
-  // Loader height scales proportionally
   const loaderHeight = refreshing ? 50 : pull * 0.4;
-  // Arrow rotation (0 to 180deg as pull goes from 0 to threshold)
   const arrowRotation = Math.min((pull / threshold) * 180, 180);
 
   return (
@@ -52,7 +45,6 @@ const PullToRefresh: React.FC<PullToRefreshProps> = ({
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Loader */}
       <div
         style={{
           height: loaderHeight,
@@ -86,7 +78,6 @@ const PullToRefresh: React.FC<PullToRefreshProps> = ({
         ) : null}
       </div>
 
-      {/* Content stays in place */}
       <div>{children}</div>
 
       <style>
@@ -100,5 +91,3 @@ const PullToRefresh: React.FC<PullToRefreshProps> = ({
     </div>
   );
 };
-
-export default PullToRefresh;

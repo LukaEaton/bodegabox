@@ -1,46 +1,104 @@
 import { useEffect, useState } from "react";
-import { Accordion, DropdownSelect } from "../components";
-import { IngredientCard } from "../components/IngredientCard";
-import PullToRefresh from "../components/PullToRefresh";
-import IngredientService from "../services/IngredientService";
-import StoreService from "../services/StoreService";
-import CategoryService from "../services/CategoryService";
+import { 
+	Accordion, 
+	DropdownSelect, 
+	PullToRefresh, 
+	IngredientCard, 
+	FloatingButton, 
+	IngredientModal,
+	TabHeader
+} from "../components";
+import { IngredientService, StoreService, CategoryService } from "../services";
+import { Ingredient, PendingIngredient, Store, Category } from "../types";
+import { FaPlus } from "react-icons/fa";
+import { useAlert } from "../context/AlertContext";
 
 export function ShoppingListPage() {
 
 	const [expandAll, setExpandAll] = useState<boolean | null>(true);
-	const [stores, setStores] = useState<Array<{ value: number | null; label: string }>>([]);
+	const [addIngredientModalOpen, setAddIngredientModalOpen] = useState<boolean>(false);
+	const [editIngredient, setEditIngredient] = useState<Ingredient | null>(null);
+	const [stores, setStores] = useState<Store[]>([]);
 	const [selectedStore, setSelectedStore] = useState<number | null>(null);
-	const [categories, setCategories] = useState<Array<{ id: number | null; name: string }>>([]);
-	const [allIngredients, setAllIngredients] = useState<Array<{
-		id: number;
-		name: string;
-		categoryId: number;
-		storeId: number;
-	}>>([]);
-	const [filteredIngredients, setFilteredIngredients] = useState<Array<{
-		id: number;
-		name: string;
-		categoryId: number;
-		storeId: number;
-	}>>([]);
+	const [categories, setCategories] = useState<Category[]>([]);
+	const [allIngredients, setAllIngredients] = useState<Ingredient[]>([]);
+	const [filteredIngredients, setFilteredIngredients] = useState<Ingredient[]>([]);
+	const { setAlert } = useAlert();
+
+	const getShoppingList = () => {
+		IngredientService.getSavedIngredients()
+			.then(ingredients =>
+				setAllIngredients(ingredients)
+			)
+			.catch(error => console.error(error));
+	};
+
+	const getStores = () => {
+		StoreService.getStores()
+			.then(storesList => {
+				setStores(storesList);
+			})
+			.catch(error => console.error(error));
+	};
+
+	const getCategories = () => {
+		CategoryService.getCategories()
+			.then(categoriesList =>
+			setCategories(categoriesList)
+			)
+			.catch(error => console.error(error));
+	}
+
+	const handleAddIngredient = (ingredient: PendingIngredient) => {
+		IngredientService.addIngredientToList(ingredient).then(() => {
+			getShoppingList();
+			setAddIngredientModalOpen(false);
+			setAlert("Ingredient Added!", "Success");
+		})
+		.catch(error => {
+			if ((error as any).status === 409) {
+				setAlert("Ingredient is already on the list!");
+				console.log((error as any).message);
+			}
+			else {
+				setAlert((error as any).message);
+			}
+		});	
+	};
+
+	const handleEditIngredient = (ingredient: PendingIngredient) => {
+		IngredientService.editListIngredient(ingredient).then(() => {
+			getShoppingList();
+			setAddIngredientModalOpen(false);
+			setEditIngredient(null);
+			setAlert("Ingredient Edited!", "Success");
+		})
+		.catch(error => {
+			if ((error as any).status === 409) {
+				setAlert("Ingredient is purchased or not on the list!");
+			}
+			else {
+				setAlert((error as any).message);
+			}
+		});	
+	}
+
+	const handlePurchaseIngredient = (ingredientId: number) => {
+		IngredientService.purchase(ingredientId).then(() => {
+			getShoppingList();
+		});
+	};
+
+	const handleRevertPurchaseIngredient = (ingredientId: number) => {
+		IngredientService.revertPurchase(ingredientId).then(() => {
+			getShoppingList();
+		});
+	};
 
 	useEffect(() => {
-		
-		IngredientService.getIngredients().then(ingredients =>
-			setAllIngredients(ingredients)
-		);
-
-		StoreService.getStores().then(storesList =>
-			storesList?.map(store => ({ value: store.id, label: store.name }))
-		).then(storesList =>
-			setStores([{ value: null, label: "Select Store..." }, ...storesList])
-		);
-
-		CategoryService.getCategories().then(categoriesList =>
-			setCategories(categoriesList)
-		);
-
+		getShoppingList();
+		getStores();
+		getCategories();
 	}, []);
 
 	useEffect(() => {
@@ -50,47 +108,41 @@ export function ShoppingListPage() {
 	}, [selectedStore, allIngredients]);
 
 	return (
-		<>
-			<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center",
-				margin: "10px"
-			 }}>
-				<h1 style={{ margin: "0px" }}>Shopping List</h1>
+		<div className="tab">
+			<TabHeader title="Shopping List">
 				<button
-					style={{
-						padding: "5px 10px",
-						borderRadius: "5px",
-						height: "fit-content",
-						background: "transparent",
-					}}
-					onClick={() => setExpandAll(!expandAll)}
-				>
-					{expandAll ? "Collapse All" : "Expand All"}
-				</button>
-			</div>
-			<div style={{ margin: "20px 5px" }}>
-				<DropdownSelect 
-					options={stores}
-					value={selectedStore}
-					onChange={setSelectedStore}
-					placeholder="Select Store..."
-					backgroundColor="#3A3A3A"
-					selectedBackgroundColor="#2e2e2eff"
-					fontColor="#FFFFFF"
-					borderColor="#555555"
-					className="store-dropdown"
-				/>
-			</div>
-			<div style={{ marginTop: "20px" }}>
-				<PullToRefresh onRefresh={() => IngredientService.getIngredients().then(ingredients =>
-					setAllIngredients(ingredients)
-				)}>
+                    style={{
+                        padding: "5px 10px",
+                        borderRadius: "5px",
+                        height: "fit-content",
+                        background: "rgba(0, 226, 242, 0.4)",
+                    }}
+                    onClick={() => setExpandAll(!expandAll)}
+                >
+                    {expandAll ? "Collapse All" : "Expand All"}
+                </button>
+			</TabHeader>
+			<div style={{ flex: 1, overflowY: "auto", paddingTop: "10px", padding: "10px 10px" }}>
+				<div style={{ marginBottom: "10px" }}>
+					<DropdownSelect 
+						options={[ {value: null, label: "Select Store..."}, ...stores.map(store => ({value: store.id, label: store.name}))]}
+						value={selectedStore}
+						onChange={setSelectedStore}
+						placeholder="Select Store..."
+						backgroundColor="#3A3A3A"
+						selectedBackgroundColor="#2e2e2eff"
+						fontColor="#FFFFFF"
+						borderColor="#555555"
+					/>
+				</div>
+				<PullToRefresh onRefresh={() => getShoppingList()}>
 					{categories.map(category => {
 						const categoryIngredients = filteredIngredients?.filter(
-							ingredient => ingredient.categoryId == category.id
+							ingredient => ingredient.categoryId == category.id && ingredient.valid
 						);
 						return (
 							<Accordion key={category.id} title={category.name}
-								forceExpand={expandAll}>
+								forceExpand={expandAll} style={{ marginBottom: "20px" }}>
 								<ul style={{ margin: 0, paddingLeft: "45px" }}>
 									{categoryIngredients?.map(ingredient => (
 										<li 
@@ -98,14 +150,71 @@ export function ShoppingListPage() {
 												listStyleType: "none"
 											}}
 											key={ingredient.id}
-										><IngredientCard ingredient={ingredient} /></li>
+										><IngredientCard 
+											ingredient={ingredient}
+											onEdit={(ingredient) => {
+												setEditIngredient(ingredient);
+												setAddIngredientModalOpen(true);
+											}}
+											onPurchase={handlePurchaseIngredient}
+											onRevertPurchase={handleRevertPurchaseIngredient}
+										/></li>
 									))}
 								</ul>
 							</Accordion>
 						);
 					})}
+					<Accordion title="Uncategorized" forceExpand={expandAll} style={{ marginBottom: "20px" }}>
+						<ul style={{ margin: 0, paddingLeft: "45px" }}>
+							{filteredIngredients?.filter(ingredient => !ingredient.categoryId && ingredient.valid).map(ingredient => (
+								<li 
+									style={{ listStyleType: "none" }}
+									key={ingredient.id}
+								><IngredientCard 
+									ingredient={ingredient}
+									onEdit={(ingredient) => {
+										setEditIngredient(ingredient);
+										setAddIngredientModalOpen(true);
+									}}
+									onPurchase={handlePurchaseIngredient}
+									onRevertPurchase={handleRevertPurchaseIngredient}
+								/></li>
+							))}
+						</ul>
+					</Accordion>
+					<hr/>
+					<Accordion title="Recently Purchased" forceExpand={expandAll} style={{ paddingBottom: "0px" }}>
+						<ul style={{ margin: 0, paddingLeft: "45px" }}>
+							{filteredIngredients?.filter(ingredient => !ingredient.valid).map(ingredient => (
+								<li 
+									style={{ listStyleType: "none" }}
+									key={ingredient.id}
+								><IngredientCard 
+									ingredient={ingredient}
+									onEdit={(ingredient) => {
+										setEditIngredient(ingredient);
+										setAddIngredientModalOpen(true);
+									}}
+									onPurchase={handlePurchaseIngredient}
+									onRevertPurchase={handleRevertPurchaseIngredient}
+								/></li>
+							))}
+						</ul>
+					</Accordion>
 				</PullToRefresh>
             </div>
-		</>
+			<FloatingButton onClick={() => setAddIngredientModalOpen(true)}>
+				<FaPlus size={24} />
+			</FloatingButton>
+			<IngredientModal 
+				isOpen={addIngredientModalOpen}
+				onClose={() => {setAddIngredientModalOpen(false); setEditIngredient(null);}}
+				ingredient={editIngredient}
+				onAdd={handleAddIngredient}
+				onEdit={handleEditIngredient}
+				categories={categories.map(category => ({ value: category.id, label: category.name }))}
+				stores={stores.map(store => ({ value: store.id, label: store.name }))}
+			/>
+		</div>
 	);
 }

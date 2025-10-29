@@ -1,9 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-
-type Option = {
-  value: number | null;
-  label: string;
-};
+import { Option } from "../types";
+import { IoIosArrowDown } from "react-icons/io";
 
 type DropdownSelectProps = {
   options: Option[];
@@ -40,17 +37,19 @@ export function DropdownSelect({ options, value, onChange, placeholder = "Select
         onClick={() => setOpen((o) => !o)}
         style={{
           width: "100%",
-          padding: "10px",
+          padding: "5px 7px",
           border: `1px solid ${borderColor}`,
           background: backgroundColor,
           color: "white",
           cursor: "pointer",
-          textAlign: "left", 
-          borderRadius: "4px"
+          borderRadius: "4px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center"
         }}
       >
         {options.find(opt => opt.value == value)?.label || placeholder}
-        <span style={{ float: "right" }}>▼</span>
+        <IoIosArrowDown style={open ? { transform: "rotate(180deg)" } : {}} />
       </button>
       {open && (
         <div
@@ -64,6 +63,8 @@ export function DropdownSelect({ options, value, onChange, placeholder = "Select
             zIndex: 10,
             marginTop: "5px",
             borderRadius: "4px",
+            maxHeight: "200px",
+            overflowY: "auto"
           }}
         >
           {options.map(opt => (
@@ -74,7 +75,7 @@ export function DropdownSelect({ options, value, onChange, placeholder = "Select
                 setOpen(false);
               }}
               style={{
-                padding: "10px",
+                padding: "5px 7px",
                 cursor: "pointer",
                 background: value === opt.value ? selectedBackgroundColor : backgroundColor
               }}
