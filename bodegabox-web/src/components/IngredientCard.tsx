@@ -24,7 +24,7 @@ export function IngredientCard({ ingredient, onEdit, onPurchase, onRevertPurchas
             }}
         >
             <h4 style={{ margin: "0px" }}>{ingredient.name}</h4>
-            <p style={{ margin: "0px", color: "#9f9f9fff", fontStyle: "italic" }}>{ingredient.description}</p>
+            <p style={{ margin: "0px", color: "#9f9f9fff", fontStyle: "italic", fontSize: "15px" }}>{ingredient.description}</p>
             <div style={{ marginLeft: "auto", display: "flex", gap: "10px", alignItems: "center", marginRight: "5px" }}>
                 { ingredient.valid ? 
                     <>

@@ -4,7 +4,8 @@ import { FaCirclePlus } from "react-icons/fa6";
 import { BsPencilSquare } from "react-icons/bs";
 import { IngredientService } from "../services";
 import { Ingredient, PendingIngredient, Option } from "../types";
-import { Search } from ".";
+import { Search, DropdownSelect } from ".";
+import { useAlert } from "../context/AlertContext";
 
 type IngredientModalProps = {
   isOpen: boolean;
@@ -12,9 +13,11 @@ type IngredientModalProps = {
   ingredient: Ingredient | null;
   onAdd: (ingredient: PendingIngredient) => void;
   onEdit: (ingredient: PendingIngredient) => void;
+  categories: Option[];
+  stores: Option[];
 }
 
-export function IngredientModal({ isOpen, onClose, ingredient, onAdd, onEdit }: IngredientModalProps) {
+export function IngredientModal({ isOpen, onClose, ingredient, onAdd, onEdit, categories, stores }: IngredientModalProps) {
 
   if (!isOpen) return null;
 
@@ -22,11 +25,16 @@ export function IngredientModal({ isOpen, onClose, ingredient, onAdd, onEdit }: 
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<number | null>(null);
   const [description, setDescription] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [selectedStore, setSelectedStore] = useState<number | null>(null);
+  const { setAlert } = useAlert();
 
   const clearFields = () => {
     setSearch("");
     setSelected(null);
     setDescription("");
+    setSelectedCategory(null);
+    setSelectedStore(null);
   }
 
   const handleAdd = () => {
@@ -35,7 +43,17 @@ export function IngredientModal({ isOpen, onClose, ingredient, onAdd, onEdit }: 
   };
 
   const handleEdit = () => {
-    onEdit({ ingredientId: ingredient!.id, description: description.trim()})
+    if((selectedCategory && selectedCategory !== ingredient!.categoryId) ||
+       (selectedStore && selectedStore !== ingredient!.storeId)) {
+      IngredientService.updateIngredientDetails({id: ingredient!.id, name: ingredient!.name, categoryId: selectedCategory!, storeId: selectedStore!}) 
+        .then(() => onEdit({ ingredientId: ingredient!.id, description: description.trim()}))
+        .catch(() => {
+          setAlert("Failed to update ingredient's Category and/or Store.");
+        });
+    }
+    else {
+      onEdit({ ingredientId: ingredient!.id, description: description.trim()})
+    }
     clearFields();
   }
 
@@ -59,12 +77,17 @@ export function IngredientModal({ isOpen, onClose, ingredient, onAdd, onEdit }: 
   }, [isOpen]);
 
   useEffect(() => {
-    setDescription(ingredient ? ingredient.description ? ingredient.description : "" : "")
+    if(ingredient) {
+      setDescription(ingredient.description ? ingredient.description : "");
+      setSelectedCategory(ingredient.categoryId);
+      setSelectedStore(ingredient.storeId);
+    }
   }, [ingredient]);
 
   return (
     <div className="modal-overlay">
       <div className="modal-container">
+
         <div className="modal-header">
           <h2 style={{margin: "0px"}}>{ingredient ? "Edit" : "Add"} Ingredient</h2>
           <button 
@@ -75,34 +98,72 @@ export function IngredientModal({ isOpen, onClose, ingredient, onAdd, onEdit }: 
             }}
           ><FaTimes /></button>
         </div>
+
         <hr/>
-        <div className="modal-body">
-          { ingredient ? 
-            <div>{ingredient.name}</div> 
-            : 
-            <Search 
-              searchRef={inputRef}
-              search={search}
-              setSearch={setSearch}
-              setSelected={setSelected}
-              searchMethod={handleSearch}
+
+        <div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "20px", margin: "20px 0" }}>
+            { ingredient ? 
+              <div>{ingredient.name}</div> 
+              : 
+              <Search 
+                searchRef={inputRef}
+                search={search}
+                setSearch={setSearch}
+                setSelected={setSelected}
+                searchMethod={handleSearch}
+              />
+            }
+            <textarea
+              id="ingredient-description"
+              placeholder="Description (optional)"
+              value={description}
+              className="input-field"
+              onChange={(e) => setDescription(e.target.value)}
+              style={{ width: "100%", 
+                fontFamily: "Optima, Segoe, Segoe UI, Candara, Calibri, Arial, sans-serif",
+                maxWidth: "100%",
+                minWidth: "100%",
+                height: "80px"
+              }}
             />
+          </div>
+          { ingredient &&
+            <div>
+              <hr/>
+              <div style={{ display: "flex", flexDirection: "column", gap: "20px", margin: "20px 0" }}>
+                <div>
+                  <h3 style={{ margin: "0 0 8px" }}>Category</h3>
+                  <DropdownSelect 
+                    options={categories}
+                    value={selectedCategory}
+                    onChange={setSelectedCategory}
+                    backgroundColor="#3A3A3A"
+                    selectedBackgroundColor="#2e2e2eff"
+                    fontColor="#FFFFFF"
+                    borderColor="#555555"
+                  />
+                </div>
+                <div>
+                  <h3 style={{ margin: "0 0 8px" }}>Store</h3>
+                  <DropdownSelect 
+                    options={stores}
+                    value={selectedStore}
+                    onChange={setSelectedStore}
+                    backgroundColor="#3A3A3A"
+                    selectedBackgroundColor="#2e2e2eff"
+                    fontColor="#FFFFFF"
+                    borderColor="#555555"
+                  />
+                </div>
+              </div>
+            </div>
           }
-          <textarea
-            placeholder="Description (optional)"
-            value={description}
-            className="input-field"
-            onChange={(e) => setDescription(e.target.value)}
-            style={{ width: "100%", 
-              marginTop: "20px", 
-              fontFamily: "Optima, Segoe, Segoe UI, Candara, Calibri, Arial, sans-serif",
-              maxWidth: "100%",
-              minWidth: "100%",
-              height: "80px"
-            }}
-          />
+
         </div>
+
         <hr/>
+
         <div className="modal-footer">
           {ingredient ? 
             <button 

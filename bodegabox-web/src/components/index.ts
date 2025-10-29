@@ -8,6 +8,7 @@ import { FloatingButton } from "./FloatingButton";
 import { IngredientModal } from "./IngredientModal";
 import { Search } from "./Search";
 import { BodegaBoxLogo } from "./BodegaBoxLogo";
+import { TabHeader } from "./TabHeader";
 
 export { 
     Navigation, 
@@ -19,5 +20,6 @@ export {
     FloatingButton, 
     IngredientModal,
     Search,
-    BodegaBoxLogo
+    BodegaBoxLogo,
+    TabHeader
 };

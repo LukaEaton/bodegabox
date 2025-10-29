@@ -1,5 +1,7 @@
+import { TabHeader } from "../components";
+
 export function RecipesPage() {
     return (
-        <div className="tab">recipes</div>
+        <TabHeader title="Recipes" />
     );
 }

@@ -50,6 +50,16 @@ const IngredientService = {
             "Content-Type": "application/json",
         },
     });
+  },
+
+  async updateIngredientDetails(ingredient: Ingredient) {
+    await RequestService.apiRequest(`${apiBaseUrl}/ingredients/updateDetails`, {
+        method: "PUT",
+        body: ingredient,
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
   }
 };
 

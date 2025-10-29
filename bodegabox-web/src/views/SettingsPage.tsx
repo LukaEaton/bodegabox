@@ -1,5 +1,7 @@
+import { TabHeader } from "../components";
+
 export function SettingsPage() {
     return (
-        <div className="tab">settings</div>
+        <TabHeader title="Settings" />
     );
 }

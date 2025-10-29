@@ -102,10 +102,6 @@ nav button.active {
     justify-content: space-between;
 }
 
-.modal-body {
-    padding: 20px 0;
-}
-
 .modal-footer {
     display: flex;
     padding-top: 10px;

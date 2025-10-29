@@ -165,6 +165,22 @@ func RegisterRoutes(rg *gin.RouterGroup, service *Service) {
 		c.JSON(http.StatusOK, nil)
 	})
 
+	// PUT /ingredients/updateDetails
+	rg.PUT("/updateDetails", func(c *gin.Context) {
+		var input Ingredient
+		if err := c.ShouldBindJSON(&input); err != nil {
+			log.Println(err)
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid input"})
+			return
+		}
+		err := service.UpdateIngredientDetails(input)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to update ingredient details"})
+			return
+		}
+		c.JSON(http.StatusOK, nil)
+	})
+
 	// POST /ingredients/
 	rg.POST("/", func(c *gin.Context) {
 		var input struct {

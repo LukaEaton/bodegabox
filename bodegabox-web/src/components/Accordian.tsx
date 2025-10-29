@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { IoIosArrowForward } from "react-icons/io";
 
 type AccordionProps = {
   title: string;
@@ -33,19 +34,7 @@ export function Accordion({ title, children, forceExpand, style }: AccordionProp
             }}
             onClick={() => setOpen((o) => !o)}
         >
-            <svg 
-                style={open ? { transform: "rotate(90deg)" } : {}}
-                width={25} 
-                height={25} 
-                viewBox="0 0 24 24" 
-                fill="none"
-            >
-                <path 
-                    d="M10 7L15 12L10 17" stroke="#ffffff" 
-                    strokeWidth="1.5" strokeLinecap="round" 
-                    strokeLinejoin="round">
-                </path>
-            </svg>
+            <IoIosArrowForward style={open ? { transform: "rotate(90deg)"} : {}}/>
             <h3 style={{ margin: "0px" }}>{title}</h3>
         </button>
       </div>

@@ -6,10 +6,10 @@ import {
 	IngredientCard, 
 	FloatingButton, 
 	IngredientModal,
-	BodegaBoxLogo 
+	TabHeader
 } from "../components";
 import { IngredientService, StoreService, CategoryService } from "../services";
-import { Ingredient, PendingIngredient, Option, Category } from "../types";
+import { Ingredient, PendingIngredient, Store, Category } from "../types";
 import { FaPlus } from "react-icons/fa";
 import { useAlert } from "../context/AlertContext";
 
@@ -18,7 +18,7 @@ export function ShoppingListPage() {
 	const [expandAll, setExpandAll] = useState<boolean | null>(true);
 	const [addIngredientModalOpen, setAddIngredientModalOpen] = useState<boolean>(false);
 	const [editIngredient, setEditIngredient] = useState<Ingredient | null>(null);
-	const [stores, setStores] = useState<Option[]>([]);
+	const [stores, setStores] = useState<Store[]>([]);
 	const [selectedStore, setSelectedStore] = useState<number | null>(null);
 	const [categories, setCategories] = useState<Category[]>([]);
 	const [allIngredients, setAllIngredients] = useState<Ingredient[]>([]);
@@ -26,27 +26,27 @@ export function ShoppingListPage() {
 	const { setAlert } = useAlert();
 
 	const getShoppingList = () => {
-		IngredientService.getSavedIngredients().then(ingredients =>
-			setAllIngredients(ingredients)
-		);
+		IngredientService.getSavedIngredients()
+			.then(ingredients =>
+				setAllIngredients(ingredients)
+			)
+			.catch(error => console.error(error));
 	};
 
 	const getStores = () => {
 		StoreService.getStores()
 			.then(storesList => {
-				const options: Option[] = storesList?.map(store => ({
-					value: store.id,
-					label: store.name,
-				}));
-				setStores([ {value: null, label: "Select Store..."}, ...options]);
+				setStores(storesList);
 			})
 			.catch(error => console.error(error));
 	};
 
 	const getCategories = () => {
-		CategoryService.getCategories().then(categoriesList =>
+		CategoryService.getCategories()
+			.then(categoriesList =>
 			setCategories(categoriesList)
-		);
+			)
+			.catch(error => console.error(error));
 	}
 
 	const handleAddIngredient = (ingredient: PendingIngredient) => {
@@ -109,31 +109,23 @@ export function ShoppingListPage() {
 
 	return (
 		<div className="tab">
-			<div style={{ position: "sticky", top: 0, zIndex: 10, backgroundColor: "#272727ff", padding: "15px 20px", borderBottom: "4px solid rgba(0, 226, 242, 0.4)" }}>
-				<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center",
-					margin: "0px"
-				}}>
-					<div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-						<BodegaBoxLogo />
-						<h2 style={{ margin: "0px" }}>Shopping List</h2>
-					</div>
-					<button
-						style={{
-							padding: "5px 10px",
-							borderRadius: "5px",
-							height: "fit-content",
-							background: "rgba(0, 226, 242, 0.4)",
-						}}
-						onClick={() => setExpandAll(!expandAll)}
-					>
-						{expandAll ? "Collapse All" : "Expand All"}
-					</button>
-				</div>
-			</div>
+			<TabHeader title="Shopping List">
+				<button
+                    style={{
+                        padding: "5px 10px",
+                        borderRadius: "5px",
+                        height: "fit-content",
+                        background: "rgba(0, 226, 242, 0.4)",
+                    }}
+                    onClick={() => setExpandAll(!expandAll)}
+                >
+                    {expandAll ? "Collapse All" : "Expand All"}
+                </button>
+			</TabHeader>
 			<div style={{ flex: 1, overflowY: "auto", paddingTop: "10px", padding: "10px 10px" }}>
 				<div style={{ marginBottom: "10px" }}>
 					<DropdownSelect 
-						options={stores}
+						options={[ {value: null, label: "Select Store..."}, ...stores.map(store => ({value: store.id, label: store.name}))]}
 						value={selectedStore}
 						onChange={setSelectedStore}
 						placeholder="Select Store..."
@@ -220,6 +212,8 @@ export function ShoppingListPage() {
 				ingredient={editIngredient}
 				onAdd={handleAddIngredient}
 				onEdit={handleEditIngredient}
+				categories={categories.map(category => ({ value: category.id, label: category.name }))}
+				stores={stores.map(store => ({ value: store.id, label: store.name }))}
 			/>
 		</div>
 	);

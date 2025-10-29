@@ -147,6 +147,22 @@ func (s *Service) VerifySavedIngredientExists(ingredientID int, valid bool) (int
 	return count, nil
 }
 
+// UpdateIngredientDetails updates an ingredient's name/category/store.
+func (s *Service) UpdateIngredientDetails(ingredient Ingredient) error {
+	_, err := s.db.Exec(
+		`UPDATE ingredients
+			SET name = $2,
+				category_id = $3,
+				store_id = $4
+			WHERE id = $1`,
+		ingredient.ID,
+		ingredient.Name,
+		ingredient.CategoryID,
+		ingredient.StoreID,
+	)
+	return err
+}
+
 // Create adds a new ingredient to the database.
 func (s *Service) Create(name string, categoryID, storeID int) (Ingredient, error) {
 	var id int
