@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Option } from "../types";
 import { IoIosArrowDown } from "react-icons/io";
+import { FaTimes } from "react-icons/fa";
 
 type DropdownSelectProps = {
   options: Option[];
@@ -49,7 +50,10 @@ export function DropdownSelect({ options, value, onChange, placeholder = "Select
         }}
       >
         {options.find(opt => opt.value == value)?.label || placeholder}
-        <IoIosArrowDown style={open ? { transform: "rotate(180deg)" } : {}} />
+        <div style={{ display: "flex", gap: "5px" }}>
+          <FaTimes className="dropdown-close" onClick={() => {setOpen(false); onChange(null);}}/>
+          <IoIosArrowDown style={open ? { transform: "rotate(180deg)" } : {}} />
+        </div>
       </button>
       {open && (
         <div

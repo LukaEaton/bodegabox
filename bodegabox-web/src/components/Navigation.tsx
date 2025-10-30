@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { FaList, FaPiggyBank, FaUtensils } from 'react-icons/fa';
 import { FaBookOpen, FaGear } from "react-icons/fa6";
@@ -6,7 +6,8 @@ import { FaBookOpen, FaGear } from "react-icons/fa6";
 export function Navigation() {
 
     const navigate = useNavigate();
-    const [ activeTab, setActiveTab ] = useState(1);
+    const location = useLocation();
+    const [ activeTab, setActiveTab ] = useState(location.state?.activeTab || 1);
 
     const tabsData = [
         { id: 1, label: 'Shopping List', path: '/list' },
@@ -37,7 +38,10 @@ export function Navigation() {
         <button 
             key={tab.id} 
             className={activeTab === tab.id ? 'active' : ''} 
-            onClick={() => { setActiveTab(tab.id); navigate(tab.path); }}
+            onClick={() => { 
+                setActiveTab(tab.id); 
+                navigate(tab.path, { state: { activeTab: tab.id}}); 
+            }}
         >{renderTabIcon(tab.label)}</button>
     ));
 

@@ -6,10 +6,12 @@ type AccordionProps = {
   children: React.ReactNode;
   forceExpand?: boolean | null;
   style? : React.CSSProperties;
+  flipped? : boolean;
+  startClosed?: boolean;
 };
 
-export function Accordion({ title, children, forceExpand, style }: AccordionProps) {
-  const [open, setOpen] = useState(true);
+export function Accordion({ title, children, forceExpand, style, flipped, startClosed }: AccordionProps) {
+  const [open, setOpen] = useState(startClosed ? false: true);
 
   useEffect(() => {
     if (forceExpand != null) {
@@ -30,12 +32,23 @@ export function Accordion({ title, children, forceExpand, style }: AccordionProp
                 fontWeight: "bold",
                 display: "flex",
                 gap: "5px",
-                alignItems: "center"
+                alignItems: "center",
+                justifyContent: flipped ? "space-between" : "normal"
             }}
             onClick={() => setOpen((o) => !o)}
         >
-            <IoIosArrowForward style={open ? { transform: "rotate(90deg)"} : {}}/>
-            <h3 style={{ margin: "0px" }}>{title}</h3>
+          { flipped ? 
+            <>
+              <h3 style={{ margin: "0px" }}>{title}</h3>
+              <IoIosArrowForward style={open ? { transform: "rotate(90deg)"} : {}}/>
+            </>
+            :
+            <>
+              <IoIosArrowForward style={open ? { transform: "rotate(90deg)"} : {}}/>
+              <h3 style={{ margin: "0px" }}>{title}</h3>
+            </>
+            
+          }
         </button>
       </div>
       {open && (

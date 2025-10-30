@@ -130,6 +130,14 @@ nav button.active {
     color: #ff4d4d;
 }
 
+.dropdown-close {
+    cursor: pointer;
+}
+
+.dropdown-close:hover {
+    color: #ff4d4d;
+}
+
 .add-button {
     display: flex;
     align-items: center;
@@ -190,4 +198,21 @@ nav button.active {
 @keyframes shrink {
   from { width: 100%; }
   to { width: 0%; }
+}
+
+.accordion-list {
+    margin: 0;
+    padding: 10px 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.settings-body > div {
+    border-bottom: 1px solid white;
+    padding-bottom: 15px
+}
+
+.accordion-option {
+    list-style-type: none;
 }
