@@ -1,6 +1,11 @@
 import { Accordion, TabHeader } from "../components";
+import { RgbaColorPicker, RgbaColor } from "react-colorful";
+import { useState } from "react";
 
 export function SettingsPage() {
+
+    const [secondaryColor, setSecondaryColor] = useState<RgbaColor>({ r: 255, g: 0, b: 0, a: 1 });
+
     return (
         <>
             <TabHeader title="Settings" />
@@ -8,7 +13,8 @@ export function SettingsPage() {
                 <Accordion title="Color Theme" flipped={true} style={{ marginBottom: "20px" }} startClosed={true}>
                     <ul className="accordion-list">
                         <li className="accordion-option">Dark/Light Mode</li>
-                        <li className="accordion-option">Secondary Color</li>
+                        <li className="accordion-option">Secondary Color: {`rgba(${secondaryColor.r},${secondaryColor.g},${secondaryColor.b},${secondaryColor.a})`}</li>
+                        <RgbaColorPicker style={{ width: "200px", height: "200px" }} color={secondaryColor} onChange={setSecondaryColor} />
                     </ul>
                 </Accordion>
                 <Accordion title="Manage Ingredients" flipped={true} style={{ marginBottom: "20px" }} startClosed={true}>
