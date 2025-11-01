@@ -8,15 +8,10 @@ type DropdownSelectProps = {
   value: number | null;
   onChange: (value: number | null) => void;
   placeholder?: string;
-  backgroundColor: string;
-  selectedBackgroundColor: string;
-  fontColor: string;
-  borderColor: string;
   className?: string;
 };
 
-export function DropdownSelect({ options, value, onChange, placeholder = "Select...", 
-    backgroundColor, selectedBackgroundColor, borderColor, className }: DropdownSelectProps) {
+export function DropdownSelect({ options, value, onChange, placeholder = "Select...", className }: DropdownSelectProps) {
 
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -36,12 +31,10 @@ export function DropdownSelect({ options, value, onChange, placeholder = "Select
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
+        className="dropdown-button"
         style={{
           width: "100%",
           padding: "5px 7px",
-          border: `1px solid ${borderColor}`,
-          background: backgroundColor,
-          color: "white",
           cursor: "pointer",
           borderRadius: "4px",
           display: "flex",
@@ -51,19 +44,18 @@ export function DropdownSelect({ options, value, onChange, placeholder = "Select
       >
         {options.find(opt => opt.value == value)?.label || placeholder}
         <div style={{ display: "flex", gap: "5px" }}>
-          <FaTimes className="dropdown-close" onClick={() => {setOpen(false); onChange(null);}}/>
+          <FaTimes className="dropdown-close" onClick={(e) => {e.stopPropagation(); setOpen(false); onChange(null);}}/>
           <IoIosArrowDown style={open ? { transform: "rotate(180deg)" } : {}} />
         </div>
       </button>
       {open && (
         <div
+          className="dropdown-button"
           style={{
             position: "absolute",
             top: "100%",
             left: 0,
             right: 0,
-            background: backgroundColor,
-            border: `1px solid ${borderColor}`,
             zIndex: 10,
             marginTop: "5px",
             borderRadius: "4px",
@@ -80,8 +72,7 @@ export function DropdownSelect({ options, value, onChange, placeholder = "Select
               }}
               style={{
                 padding: "5px 7px",
-                cursor: "pointer",
-                background: value === opt.value ? selectedBackgroundColor : backgroundColor
+                cursor: "pointer"
               }}
             >
               {opt.label}

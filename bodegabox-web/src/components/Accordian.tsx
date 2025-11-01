@@ -23,6 +23,7 @@ export function Accordion({ title, children, forceExpand, style, flipped, startC
     <div style={style}>
       <div style={{ alignItems: "center", gap: "8px" }}>
         <button
+            className="accordion-button"
             style={{
                 width: "100%",
                 textAlign: "left",

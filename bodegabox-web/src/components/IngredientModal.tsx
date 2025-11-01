@@ -138,10 +138,6 @@ export function IngredientModal({ isOpen, onClose, ingredient, onAdd, onEdit, ca
                     options={categories}
                     value={selectedCategory}
                     onChange={setSelectedCategory}
-                    backgroundColor="#3A3A3A"
-                    selectedBackgroundColor="#2e2e2eff"
-                    fontColor="#FFFFFF"
-                    borderColor="#555555"
                   />
                 </div>
                 <div>
@@ -150,10 +146,6 @@ export function IngredientModal({ isOpen, onClose, ingredient, onAdd, onEdit, ca
                     options={stores}
                     value={selectedStore}
                     onChange={setSelectedStore}
-                    backgroundColor="#3A3A3A"
-                    selectedBackgroundColor="#2e2e2eff"
-                    fontColor="#FFFFFF"
-                    borderColor="#555555"
                   />
                 </div>
               </div>
