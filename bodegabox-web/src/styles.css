@@ -174,7 +174,7 @@ nav button.active {
     align-items: center;
     border-radius: 15px;
     padding: 4px 10px;
-    background-color: #28a745;
+    background-color: #36da5c;
     color: var(--text-color);
     border: none;
     cursor: pointer;
@@ -185,7 +185,7 @@ nav button.active {
 }
 
 .enabled-button:hover {
-    background-color: #36da5c;
+    background-color: #3cf166;
 }
 
 .disabled-button {
@@ -281,4 +281,14 @@ nav button.active {
 
 .flex-grow {
     flex-grow: 1;
+}
+
+.settings-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.secondary-color-bg {
+    background-color: var(--secondary-color);
 }

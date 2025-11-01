@@ -10,6 +10,7 @@ import { Search } from "./Search";
 import { BodegaBoxLogo } from "./BodegaBoxLogo";
 import { TabHeader } from "./TabHeader";
 import { Toggle } from "./Toggle";
+import { RgbModal } from "./RgbModal";
 
 export { 
     Navigation, 
@@ -23,5 +24,6 @@ export {
     Search,
     BodegaBoxLogo,
     TabHeader,
-    Toggle
+    Toggle,
+    RgbModal
 };
