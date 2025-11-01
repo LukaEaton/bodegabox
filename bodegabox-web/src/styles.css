@@ -122,9 +122,9 @@ nav button.active {
 }
 
 .modal-header {
-    padding-bottom: 10px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .modal-footer {

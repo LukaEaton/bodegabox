@@ -42,7 +42,7 @@ export function RgbModal({ isOpen, onClose }: RgbModalProps) {
     return (
         <div className="modal-overlay">
             <div className="modal-container" style={{width:"fit-content", padding:"15px"}}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div className="modal-header">
                     <h3 style={{ margin: "0px" }}>Secondary Color</h3>
                     <FaTimes className="close-button" onClick={onClose} />
                 </div>
