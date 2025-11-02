@@ -66,7 +66,7 @@ export function Search({ searchRef, search, setSearch, setSelected, searchMethod
                         <li 
                             key={result.value} 
                             onClick={() => {
-                                setSelected(result.value);
+                                setSelected(result.obj? result.obj : result.value);
                                 setSearch(result.label);
                                 setShowResults(false);
                             }}

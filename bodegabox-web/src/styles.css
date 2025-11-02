@@ -131,6 +131,8 @@ nav button.active {
     display: flex;
     padding-top: 10px;
     justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
 }
 
 .input-field {
@@ -291,4 +293,18 @@ nav button.active {
 
 .secondary-color-bg {
     background-color: var(--secondary-color);
+}
+
+.action-button {
+    display: flex;
+    align-items: center;
+    border-radius: 15px;
+    padding: 4px 10px;
+    color: var(--text-color);
+    border: none;
+    cursor: pointer;
+}
+
+.modal-width-fit-content {
+    width: fit-content;
 }
