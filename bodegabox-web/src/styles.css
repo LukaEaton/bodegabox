@@ -176,6 +176,10 @@ hr {
     color: var(--text-color);
 }
 
+.delete-button {
+    background-color: #ff4d4d;
+}
+
 .add-button {
     display: flex;
     align-items: center;
@@ -197,6 +201,9 @@ hr {
 
 .disabled-button {
     opacity: 0.6;
+}
+
+.disabled-button:hover {
     cursor: not-allowed;
 }
 

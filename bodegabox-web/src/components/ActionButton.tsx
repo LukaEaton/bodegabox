@@ -3,11 +3,12 @@ export type ActionButtonConfig = {
     icon?: React.ReactNode;
     onClick: () => void;
     className?: string;
+    disabled?: boolean;
 }
 
-export function ActionButton({ label, icon, onClick, className }: ActionButtonConfig) {
+export function ActionButton({ label, icon, onClick, className, disabled }: ActionButtonConfig) {
     return (
-        <button className={`action-button ${className}`} onClick={onClick}>
+        <button className={`action-button ${className} ${disabled && "disabled-button "}`} onClick={onClick} disabled={disabled}>
             {icon}
             {label}
         </button>

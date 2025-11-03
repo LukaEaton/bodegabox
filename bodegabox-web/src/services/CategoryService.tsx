@@ -12,6 +12,10 @@ const CategoryService = {
             console.error("Error fetching categories:", error);
             return [];
         }
+    },
+
+    async searchCategories(query: string): Promise<Category[]> {
+        return await RequestService.apiRequest<Category[]>(`${apiBaseUrl}/categories/search?q=${encodeURIComponent(query)}`);
     }
 }
 

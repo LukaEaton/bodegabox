@@ -35,6 +35,7 @@ export function Modal({ isOpen, onClose, title, children, footerButtons, contain
                             icon={button.icon}
                             onClick={button.onClick}
                             className={button.className}
+                            disabled={button.disabled}
                         />
                     ))}
                 </div>

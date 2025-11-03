@@ -12,6 +12,10 @@ const StoreService = {
             console.error("Error fetching stores:", error);
             return [];
         }
+    },
+
+    async searchStores(query: string): Promise<Store[]> {
+        return await RequestService.apiRequest<Store[]>(`${apiBaseUrl}/stores/search?q=${encodeURIComponent(query)}`);
     }
 }
 

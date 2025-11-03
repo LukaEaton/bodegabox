@@ -1,9 +1,10 @@
 import { Accordion, TabHeader, Toggle, RgbModal, Modal, Search, DropdownSelect } from "../components";
 import { useTheme } from "../context/ThemeContext";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, use } from "react";
 import { IoIosArrowForward } from "react-icons/io";
 import { RgbColorPicker, RgbColor } from "react-colorful";
-import { FaCheck } from "react-icons/fa";
+import { FaCheck, FaTimes } from "react-icons/fa";
+import { FaCirclePlus } from "react-icons/fa6";
 import { Ingredient, Category, Store, Option } from "../types";
 import { IngredientService, CategoryService, StoreService } from "../services";
 
@@ -42,6 +43,36 @@ export function SettingsPage() {
     const [stores, setStores] = useState<Store[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
     const [selectedStore, setSelectedStore] = useState<number | null>(null);
+    const addButtonConfig = [
+        {
+            label: "Add",
+            icon: <FaCirclePlus style={{ marginRight: "5px" }} />,
+            onClick: () => {console.log(selected === null)},
+            className: "add-button",
+            disabled: name === ""
+        }
+    ];
+    const editAndDeleteButtonConfig = [
+        {
+            label: "Save",
+            icon: <FaCheck style={{ marginRight: "5px" }} />,
+            onClick: () => {},
+            className: "add-button",
+            disabled: selected === null
+        },
+        {
+            label: "Delete",
+            icon: <FaTimes style={{ marginRight: "5px" }} />,
+            onClick: () => {},
+            className: "delete-button",
+            disabled: selected === null
+        }
+    ];
+    const openManageModal = (entity: "Ingredient" | "Category" | "Store", mode: "Add" | "Edit") => {
+        setManageEntity(entity);
+        setMode(mode);
+        setManageModalOpen(true);
+    };
     const onCloseManageModal = () => {
         setManageModalOpen(false);
         setSearch("");
@@ -55,14 +86,14 @@ export function SettingsPage() {
             const ingredients = await IngredientService.searchIngredients(input);
             return ingredients.map(ing => ({ value: ing.id, label: ing.name, obj: ing }));
         }
-        // else if(manageEntity === "Category") {
-        //     const categories = await CategoryService.searchCategories(input);
-        //     return categories.map(cat => ({ value: cat.id, label: cat.name }));
-        // }
-        // else if(manageEntity === "Store") {
-        //     const stores = await StoreService.searchStores(input);
-        //     return stores.map(store => ({ value: store.id, label: store.name }));
-        // }
+        else if(manageEntity === "Category") {
+            const categories = await CategoryService.searchCategories(input);
+            return categories.map(cat => ({ value: cat.id, label: cat.name, obj: cat }));
+        }
+        else if(manageEntity === "Store") {
+            const stores = await StoreService.searchStores(input);
+            return stores.map(store => ({ value: store.id, label: store.name, obj: store }));
+        }
         else return [];
     }
     useEffect(() => {
@@ -72,6 +103,7 @@ export function SettingsPage() {
         }
     }, [manageEntity]);
     useEffect(() => {
+        console.log(selected);
         if(selected){
             if(manageEntity === "Ingredient"){
                 setName((selected as Ingredient).name || "");
@@ -89,6 +121,11 @@ export function SettingsPage() {
             }
         }
     }, [selected]);
+    useEffect(() => {
+        if (manageModalOpen && inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [manageModalOpen]);
 
     return (
         <>
@@ -103,22 +140,22 @@ export function SettingsPage() {
                 <hr />
                 <Accordion title="Manage Ingredients" flipped={true} style={{ marginBottom: "20px" }} startClosed={true}>
                     <ul className="accordion-list" style={{paddingBottom:"0"}}>
-                        <li className="accordion-option settings-option" onClick={() => {setMode("Add");setManageEntity("Ingredient");setManageModalOpen(true);}}><span>Add Ingredient</span><IoIosArrowForward /></li>
-                        <li className="accordion-option settings-option" onClick={() => {setMode("Edit");setManageEntity("Ingredient");setManageModalOpen(true);}}><span>Edit/Delete Ingredient</span><IoIosArrowForward /></li>
+                        <li className="accordion-option settings-option" onClick={() => openManageModal("Ingredient","Add")}><span>Add Ingredient</span><IoIosArrowForward /></li>
+                        <li className="accordion-option settings-option" onClick={() => openManageModal("Ingredient","Edit")}><span>Edit/Delete Ingredient</span><IoIosArrowForward /></li>
                     </ul>
                 </Accordion>
                 <hr />
                 <Accordion title="Manage Categories" flipped={true} style={{ marginBottom: "20px" }} startClosed={true}>
                     <ul className="accordion-list" style={{paddingBottom:"0"}}>
-                        <li className="accordion-option settings-option"><span>Add Category</span><IoIosArrowForward /></li>
-                        <li className="accordion-option settings-option"><span>Edit/Delete Category</span><IoIosArrowForward /></li>
+                        <li className="accordion-option settings-option" onClick={() => openManageModal("Category","Add")}><span>Add Category</span><IoIosArrowForward /></li>
+                        <li className="accordion-option settings-option" onClick={() => openManageModal("Category","Edit")}><span>Edit/Delete Category</span><IoIosArrowForward /></li>
                     </ul>
                 </Accordion>
                 <hr />
                 <Accordion title="Manage Stores" flipped={true} style={{ marginBottom: "20px" }} startClosed={true}>
                     <ul className="accordion-list" style={{paddingBottom:"0"}}>
-                        <li className="accordion-option settings-option"><span>Add Store</span><IoIosArrowForward /></li>
-                        <li className="accordion-option settings-option"><span>Edit/Delete Store</span><IoIosArrowForward /></li>
+                        <li className="accordion-option settings-option" onClick={() => openManageModal("Store","Add")}><span>Add Store</span><IoIosArrowForward /></li>
+                        <li className="accordion-option settings-option" onClick={() => openManageModal("Store","Edit")}><span>Edit/Delete Store</span><IoIosArrowForward /></li>
                     </ul>
                 </Accordion>
             </div>
@@ -140,18 +177,22 @@ export function SettingsPage() {
                 isOpen={manageModalOpen}
                 onClose={onCloseManageModal}
                 title={`${mode === "Add" ? mode : "Edit/Delete"} ${manageEntity}`}
+                footerButtons={mode === "Add" ? addButtonConfig : editAndDeleteButtonConfig}
             >
                 {mode === "Edit" && 
-                    <Search 
-                        searchRef={inputRef}
-                        search={search}
-                        setSearch={setSearch}
-                        setSelected={setSelected}
-                        searchMethod={handleSearch}
-                    />
+                    <>
+                        <h4 style={{ margin: "20px 0 8px" }}>Select {manageEntity}</h4>
+                        <Search 
+                            searchRef={inputRef}
+                            search={search}
+                            setSearch={setSearch}
+                            setSelected={setSelected}
+                            searchMethod={handleSearch}
+                        />
+                    </>
                 }
-                <h4 style={{ margin: "20px 0 8px" }}>{manageEntity} Name</h4>
-                <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder={`Enter new ${manageEntity} name`} className="input-field" />
+                <h4 style={{ margin: "20px 0 8px" }}>{mode==="Edit" && "Edit "}{manageEntity} Name</h4>
+                <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder={`New ${manageEntity} name`} className="input-field" disabled={mode==="Edit" && selected===null} />
                 {manageEntity === "Ingredient" && 
                     <div style={{ display: "flex", flexDirection: "column", gap: "20px", margin: "20px 0" }}>
                         <div>
