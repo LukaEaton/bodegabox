@@ -67,6 +67,10 @@ nav button.active {
     border-top: 2px solid var(--secondary-color);
 }
 
+hr {
+    margin: 15px 0;
+}
+
 .tab {
     display: flex;
     flex-direction: column;
@@ -143,6 +147,7 @@ nav button.active {
     padding: 5px;
     box-sizing: border-box;
     font-size: 0.85rem;
+    width: 100%;
 }
 
 .close-button {
@@ -244,11 +249,6 @@ nav button.active {
     display: flex;
     flex-direction: column;
     gap: 10px;
-}
-
-.settings-body > div {
-    border-bottom: 1px solid var(--text-color);
-    padding-bottom: 15px
 }
 
 .accordion-option {

@@ -120,7 +120,7 @@ export function IngredientModal({ isOpen, onClose, ingredient, onAdd, onEdit, ca
               value={description}
               className="input-field"
               onChange={(e) => setDescription(e.target.value)}
-              style={{ width: "100%", 
+              style={{
                 fontFamily: "Optima, Segoe, Segoe UI, Candara, Calibri, Arial, sans-serif",
                 maxWidth: "100%",
                 minWidth: "100%",

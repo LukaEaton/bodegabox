@@ -54,7 +54,6 @@ export function Search({ searchRef, search, setSearch, setSelected, searchMethod
                 }}
                 onFocus={() => setShowResults(true)}
                 className="input-field"
-                style={{ width: "100%" }}
             />
             {showResults && results.length > 0 && (
                 <div className="floating-results">
