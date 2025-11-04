@@ -1,16 +1,18 @@
 import { Accordion, TabHeader, Toggle, RgbModal, Modal, Search, DropdownSelect } from "../components";
 import { useTheme } from "../context/ThemeContext";
-import { useState, useRef, useEffect, use } from "react";
+import { useState, useRef, useEffect } from "react";
 import { IoIosArrowForward } from "react-icons/io";
 import { RgbColorPicker, RgbColor } from "react-colorful";
 import { FaCheck, FaTimes } from "react-icons/fa";
 import { FaCirclePlus } from "react-icons/fa6";
 import { Ingredient, Category, Store, Option } from "../types";
 import { IngredientService, CategoryService, StoreService } from "../services";
+import { useAlert } from "../context/AlertContext"
 
 export function SettingsPage() {
 
     const { theme, toggleTheme, secondaryColor, setSecondaryColor } = useTheme();
+    const { setAlert } = useAlert();
 
     const [ secondaryModalOpen, setSecondaryModalOpen ] = useState(false);
     const [secondaryColorRgb, setSecondarColorRgb] =  useState<RgbColor>(rgbaToRgbColor(secondaryColor));
@@ -47,7 +49,7 @@ export function SettingsPage() {
         {
             label: "Add",
             icon: <FaCirclePlus style={{ marginRight: "5px" }} />,
-            onClick: () => {console.log(selected === null)},
+            onClick: () => handleAdd,
             className: "add-button",
             disabled: name === ""
         }
@@ -56,14 +58,14 @@ export function SettingsPage() {
         {
             label: "Save",
             icon: <FaCheck style={{ marginRight: "5px" }} />,
-            onClick: () => {},
+            onClick: () => handleEdit,
             className: "add-button",
             disabled: selected === null
         },
         {
             label: "Delete",
             icon: <FaTimes style={{ marginRight: "5px" }} />,
-            onClick: () => {},
+            onClick: () => handleDelete,
             className: "delete-button",
             disabled: selected === null
         }
@@ -96,6 +98,81 @@ export function SettingsPage() {
         }
         else return [];
     }
+    const handleAdd = async() => {
+        if(name === "") {
+            console.error("Name is required");
+            return;
+        }
+        switch(manageEntity) {
+            case "Ingredient":
+                await IngredientService.createIngredient({ name, categoryId: selectedCategory, storeId: selectedStore })
+                        .then(() => setAlert("Ingredient Created", "Success"))
+                        .catch(() => setAlert("Failed to Create Ingredient", "Error"));
+                break;
+            case "Category":
+                await CategoryService.createCategory({ name })
+                        .then(() => setAlert("Category Created", "Success"))
+                        .catch(() => setAlert("Failed to Create Category", "Error"));
+                break;
+            case "Store":
+                await StoreService.createStore({ name })
+                        .then(() => setAlert("Store Created", "Success"))
+                        .catch(() => setAlert("Failed to Create Store", "Error"));
+                break;
+            default:
+                console.error("Unknown management entity:", manageEntity);
+        }
+    }
+    const handleEdit = async() => {
+        if(!selected){
+            console.error("No item selected for editing");
+            return;
+        }
+        switch(manageEntity) {
+            case "Ingredient":
+                await IngredientService.updateIngredient({id: (selected as Ingredient).id, name, categoryId: selectedCategory, storeId: selectedStore})
+                        .then(() => setAlert("Ingredient Updated", "Success"))
+                        .catch(() => setAlert("Failed to Update Ingredient", "Error"));
+                break;
+            case "Category":
+                await CategoryService.updateCategory({id: (selected as Category).id!, name })
+                        .then(() => setAlert("Category Updated", "Success"))
+                        .catch(() => setAlert("Failed to Update Category", "Error"));
+                break;
+            case "Store":
+                await StoreService.updateStore({id: (selected as Store).id, name })
+                        .then(() => setAlert("Store Updated", "Success"))
+                        .catch(() => setAlert("Failed to Update Store", "Error"));
+                break;
+            default:
+                console.error("Unknown management entity:", manageEntity);
+        }
+    }
+    const handleDelete = async() => {
+        if(!selected){
+            console.error("No item selected for deletion");
+            return;
+        }
+        switch(manageEntity) {
+            case "Ingredient":
+                await IngredientService.deleteIngredient((selected as Ingredient).id)
+                        .then(() => setAlert("Ingredient Deleted", "Success"))
+                        .catch(() => setAlert("Failed to Delte Ingredient", "Error"));
+                break;
+            case "Category":
+                await CategoryService.deleteCategory((selected as Category).id!)
+                        .then(() => setAlert("Category Deleted", "Success"))
+                        .catch(() => setAlert("Failed to Delte Category", "Error"));
+                break;
+            case "Store":
+                await StoreService.deleteStore((selected as Store).id)
+                        .then(() => setAlert("Store Deleted", "Success"))
+                        .catch(() => setAlert("Failed to Delte Store", "Error"));
+                break;
+            default:
+                console.error("Unknown management entity:", manageEntity);
+        }
+    }
     useEffect(() => {
         if(manageEntity === "Ingredient") {
             CategoryService.getCategories().then(setCategories);
@@ -103,7 +180,6 @@ export function SettingsPage() {
         }
     }, [manageEntity]);
     useEffect(() => {
-        console.log(selected);
         if(selected){
             if(manageEntity === "Ingredient"){
                 setName((selected as Ingredient).name || "");

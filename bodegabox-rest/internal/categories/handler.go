@@ -3,7 +3,7 @@ package categories
 import (
 	"log"
 	"net/http"
-
+	"strconv"
 	"github.com/gin-gonic/gin"
 )
 
@@ -32,5 +32,75 @@ func RegisterRoutes(rg *gin.RouterGroup, service *Service) {
 			return
 		}
 		c.JSON(http.StatusOK, results)
+	})
+
+	rg.PUT("/", func(c *gin.Context) {
+		var input Category
+		if err := c.ShouldBindJSON(&input); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid input"})
+			return
+		}
+		exists, err := service.VerifyCategoryExists(input.ID)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to verify category"})
+			return
+		}
+		if !exists {
+			c.JSON(http.StatusNotFound, gin.H{"error": "category not found"})
+			return
+		}
+		updatedCategory, err := service.UpdateCategory(input.ID, input.Name)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to update category"})
+			return
+		}
+		c.JSON(http.StatusOK, updatedCategory)
+	})
+
+	rg.POST("/", func(c *gin.Context) {
+		var input struct {
+			Name string `json:"name" binding:"required"`
+		}
+		if err := c.ShouldBindJSON(&input); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid input"})
+			return
+		}
+		exists, err := service.VerifyCategoryExistsByName(input.Name)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to verify category"})
+			return
+		}
+		if exists {
+			c.JSON(http.StatusConflict, gin.H{"error": "category with this name already exists"})
+			return
+		}
+		category, err := service.CreateCategory(input.Name)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create category"})
+			return
+		}
+		c.JSON(http.StatusOK, category)
+	})
+
+	rg.DELETE("/:id", func(c *gin.Context) {
+		id, err := strconv.Atoi(c.Param("id"))
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid store ID"})
+			return
+		}
+		exists, err := service.VerifyCategoryExists(id)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to verify category"})
+			return
+		}
+		if !exists {
+			c.JSON(http.StatusNotFound, gin.H{"error": "category not found"})
+			return
+		}
+		if err := service.DeleteCategory(id); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to delete category"})
+			return
+		}
+		c.Status(http.StatusNoContent)
 	})
 }

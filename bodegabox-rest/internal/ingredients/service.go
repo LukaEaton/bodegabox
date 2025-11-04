@@ -134,7 +134,7 @@ func (s *Service) ReValidateIngredient(ingredientID int) error {
 }
 
 // VerifySavedIngredientExists 
-func (s *Service) VerifySavedIngredientExists(ingredientID int, valid bool) (int, error) {
+func (s *Service) VerifySavedIngredientExists(ingredientID int, valid bool) (bool, error) {
 	var count int
 	err := s.db.QueryRow(`
 		SELECT COUNT(*) 
@@ -142,9 +142,9 @@ func (s *Service) VerifySavedIngredientExists(ingredientID int, valid bool) (int
 		WHERE ingredient_id = $1 AND valid = $2
 	`, ingredientID, valid).Scan(&count)
 	if err != nil {
-		return -1, err
+		return false, err
 	}
-	return count, nil
+	return count > 0, nil
 }
 
 // UpdateIngredientDetails updates an ingredient's name/category/store.
@@ -164,7 +164,7 @@ func (s *Service) UpdateIngredientDetails(ingredient Ingredient) error {
 }
 
 // Create adds a new ingredient to the database.
-func (s *Service) Create(name string, categoryID, storeID int) (Ingredient, error) {
+func (s *Service) CreateIngredient(name string, categoryID, storeID int) (Ingredient, error) {
 	var id int
 	err := s.db.QueryRow(
 		`INSERT INTO ingredients (name, category_id, store_id) VALUES ($1, $2, $3) RETURNING id`,
@@ -179,4 +179,18 @@ func (s *Service) Create(name string, categoryID, storeID int) (Ingredient, erro
 		CategoryID: categoryID,
 		StoreID:    storeID,
 	}, nil
+}
+
+// VerifyIngredientExistsByName checks if an ingredient with the given name exists.
+func (s *Service) VerifyIngredientExistsByName(name string) (bool, error) {
+	var count int
+	err := s.db.QueryRow(`
+		SELECT COUNT(*)
+		FROM ingredients
+		WHERE name = $1
+	`, name).Scan(&count)
+	if err != nil {
+		return false, err
+	}
+	return count > 0, nil
 }

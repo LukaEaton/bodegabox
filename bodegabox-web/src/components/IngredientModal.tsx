@@ -45,7 +45,7 @@ export function IngredientModal({ isOpen, onClose, ingredient, onAdd, onEdit, ca
   const handleEdit = () => {
     if((selectedCategory && selectedCategory !== ingredient!.categoryId) ||
        (selectedStore && selectedStore !== ingredient!.storeId)) {
-      IngredientService.updateIngredientDetails({id: ingredient!.id, name: ingredient!.name, categoryId: selectedCategory!, storeId: selectedStore!}) 
+      IngredientService.updateIngredient({id: ingredient!.id, name: ingredient!.name, categoryId: selectedCategory!, storeId: selectedStore!}) 
         .then(() => onEdit({ ingredientId: ingredient!.id, description: description.trim()}))
         .catch(() => {
           setAlert("Failed to update ingredient's Category and/or Store.");

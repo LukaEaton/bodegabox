@@ -15,50 +15,48 @@ const IngredientService = {
   async addIngredientToList(ingredient: PendingIngredient) {
     await RequestService.apiRequest(`${apiBaseUrl}/ingredients/addToList`, {
         method: "POST",
-        body: ingredient,
-        headers: {
-            "Content-Type": "application/json",
-        },
+        body: ingredient
     });
   },
 
   async editListIngredient(ingredient: PendingIngredient) {
     await RequestService.apiRequest(`${apiBaseUrl}/ingredients/editList`, {
         method: "PUT",
-        body: ingredient,
-        headers: {
-            "Content-Type": "application/json",
-        },
+        body: ingredient
     });
   },
 
   async purchase(ingredientId: number) {
     await RequestService.apiRequest(`${apiBaseUrl}/ingredients/purchase`, {
         method: "PUT",
-        body: ingredientId,
-        headers: {
-            "Content-Type": "application/json",
-        },
+        body: ingredientId
     });
   },
 
   async revertPurchase(ingredientId: number) {
     await RequestService.apiRequest(`${apiBaseUrl}/ingredients/revertPurchase`, {
         method: "PUT",
-        body: ingredientId,
-        headers: {
-            "Content-Type": "application/json",
-        },
+        body: ingredientId
     });
   },
 
-  async updateIngredientDetails(ingredient: Ingredient) {
-    await RequestService.apiRequest(`${apiBaseUrl}/ingredients/updateDetails`, {
+  async updateIngredient(ingredient: Ingredient) {
+    await RequestService.apiRequest(`${apiBaseUrl}/ingredients/`, {
         method: "PUT",
-        body: ingredient,
-        headers: {
-            "Content-Type": "application/json",
-        },
+        body: ingredient
+    });
+  },
+
+  async deleteIngredient(ingredientId: number) {
+    await RequestService.apiRequest(`${apiBaseUrl}/ingredients/${ingredientId}/`, {
+        method: "DELETE"
+    });
+  },
+
+  async createIngredient(ingredient: Partial<Ingredient>) {
+    await RequestService.apiRequest(`${apiBaseUrl}/ingredients/`, {
+        method: "POST",
+        body: ingredient
     });
   }
 };

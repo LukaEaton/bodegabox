@@ -77,7 +77,7 @@ func RegisterRoutes(rg *gin.RouterGroup, service *Service) {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to verify if ingredient is already on the shopping list"})
 			return
 		}
-		if count > 0 {
+		if (count) {
 			c.JSON(http.StatusConflict, gin.H{"error": "ingredient is already on the shopping list"})
 			return
 		}
@@ -103,7 +103,7 @@ func RegisterRoutes(rg *gin.RouterGroup, service *Service) {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to verify if ingredient is already on the shopping list"})
 			return
 		}
-		if count == 0 {
+		if (!count) {
 			c.JSON(http.StatusConflict, gin.H{"error": "ingredient is not on the shopping list"})
 			return
 		}
@@ -128,7 +128,7 @@ func RegisterRoutes(rg *gin.RouterGroup, service *Service) {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to verify if ingredient is already on the shopping list"})
 			return
 		}
-		if count < 1 {
+		if (!count) {
 			c.JSON(http.StatusConflict, gin.H{"error": "ingredient is not on the shopping list"})
 			return
 		}
@@ -153,7 +153,7 @@ func RegisterRoutes(rg *gin.RouterGroup, service *Service) {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to verify if ingredient is already on the shopping list"})
 			return
 		}
-		if count < 1 {
+		if (!count) {
 			c.JSON(http.StatusConflict, gin.H{"error": "ingredient was not purchased"})
 			return
 		}
@@ -192,8 +192,16 @@ func RegisterRoutes(rg *gin.RouterGroup, service *Service) {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid input"})
 			return
 		}
-
-		ing, err := service.Create(input.Name, input.CategoryID, input.StoreID)
+		exists, err := service.VerifyIngredientExistsByName(input.Name)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to verify if ingredient exists"})
+			return
+		}
+		if exists {
+			c.JSON(http.StatusConflict, gin.H{"error": "ingredient with this name already exists"})
+			return
+		}
+		ing, err := service.CreateIngredient(input.Name, input.CategoryID, input.StoreID)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create ingredient"})
 			return
