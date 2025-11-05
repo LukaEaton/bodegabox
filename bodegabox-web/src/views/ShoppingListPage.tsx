@@ -48,7 +48,7 @@ export function ShoppingListPage() {
 	const getCategories = () => {
 		CategoryService.getCategories()
 			.then(categoriesList =>
-			setCategories(categoriesList)
+				setCategories(categoriesList)
 			)
 			.catch((e) => {
 				setAlert(e.message, "Error");

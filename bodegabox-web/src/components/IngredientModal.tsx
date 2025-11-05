@@ -1,11 +1,11 @@
 import { useRef, useState, useEffect } from "react";
-import { FaTimes } from "react-icons/fa";
 import { FaCirclePlus } from "react-icons/fa6";
 import { BsPencilSquare } from "react-icons/bs";
 import { IngredientService } from "../services";
 import { Ingredient, PendingIngredient, Option } from "../types";
-import { Search, DropdownSelect } from ".";
+import { Search, DropdownSelect, Modal } from "../components";
 import { useAlert } from "../context/AlertContext";
+import { ActionButtonConfig } from "./ActionButton";
 
 type IngredientModalProps = {
   isOpen: boolean;
@@ -43,8 +43,8 @@ export function IngredientModal({ isOpen, onClose, ingredient, onAdd, onEdit, ca
   };
 
   const handleEdit = () => {
-    if((selectedCategory && selectedCategory !== ingredient!.categoryId) ||
-       (selectedStore && selectedStore !== ingredient!.storeId)) {
+    if((selectedCategory !== ingredient!.categoryId) ||
+       (selectedStore !== ingredient!.storeId)) {
       IngredientService.updateIngredient({id: ingredient!.id, name: ingredient!.name, categoryId: selectedCategory!, storeId: selectedStore!}) 
         .then(() => onEdit({ ingredientId: ingredient!.id, description: description.trim()}))
         .catch(() => {
@@ -70,6 +70,25 @@ export function IngredientModal({ isOpen, onClose, ingredient, onAdd, onEdit, ca
     }
   }
 
+  const addButtonConfig: ActionButtonConfig[] = [
+    {
+      label: "Add",
+      icon: <FaCirclePlus style={{ marginRight: "5px" }} />,
+      onClick: handleAdd,
+      className: `add-button ${!selected ? "disabled-button" : "enabled-button"}`,
+      disabled: !selected
+    }
+  ];
+
+  const editButtonConfig: ActionButtonConfig[] = [
+    {
+      label: "Edit",
+      icon: <BsPencilSquare style={{ marginRight: "5px" }} />,
+      onClick: handleEdit,
+      className: "add-button enabled-button"
+    }
+  ];
+
   useEffect(() => {
     if (isOpen && inputRef.current) {
       inputRef.current.focus();
@@ -85,99 +104,62 @@ export function IngredientModal({ isOpen, onClose, ingredient, onAdd, onEdit, ca
   }, [ingredient]);
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-container">
-
-        <div className="modal-header">
-          <h2 style={{margin: "0px"}}>{ingredient ? "Edit" : "Add"} Ingredient</h2>
-          <button 
-            className="close-button" 
-            onClick={() => {
-              onClose(); 
-              clearFields();
-            }}
-          ><FaTimes /></button>
-        </div>
-
-        <hr/>
-
-        <div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "20px", margin: "20px 0" }}>
-            { ingredient ? 
-              <div>{ingredient.name}</div> 
-              : 
-              <Search 
-                searchRef={inputRef}
-                search={search}
-                setSearch={setSearch}
-                setSelected={setSelected}
-                searchMethod={handleSearch}
-              />
-            }
-            <textarea
-              id="ingredient-description"
-              placeholder="Description (optional)"
-              value={description}
-              className="input-field"
-              onChange={(e) => setDescription(e.target.value)}
-              style={{
-                fontFamily: "Optima, Segoe, Segoe UI, Candara, Calibri, Arial, sans-serif",
-                maxWidth: "100%",
-                minWidth: "100%",
-                height: "80px"
-              }}
-            />
-          </div>
-          { ingredient &&
-            <div>
-              <hr/>
-              <div style={{ display: "flex", flexDirection: "column", gap: "20px", margin: "20px 0" }}>
-                <div>
-                  <h3 style={{ margin: "0 0 8px" }}>Category</h3>
-                  <DropdownSelect 
-                    options={categories}
-                    value={selectedCategory}
-                    onChange={setSelectedCategory}
-                  />
-                </div>
-                <div>
-                  <h3 style={{ margin: "0 0 8px" }}>Store</h3>
-                  <DropdownSelect 
-                    options={stores}
-                    value={selectedStore}
-                    onChange={setSelectedStore}
-                  />
-                </div>
-              </div>
-            </div>
-          }
-
-        </div>
-
-        <hr/>
-
-        <div className="modal-footer">
-          {ingredient ? 
-            <button 
-              onClick={handleEdit}
-              className="add-button enabled-button"
-            >
-              <BsPencilSquare style={{ marginRight: "5px" }} />
-              Edit
-            </button>
-            :
-            <button 
-              onClick={handleAdd}
-              className={`add-button ${!selected ? "disabled-button" : "enabled-button"}`}
-              disabled={!selected}
-            >
-              <FaCirclePlus style={{ marginRight: "5px" }} />
-              Add
-            </button>
-          }
-        </div>
+    <Modal
+      isOpen={isOpen}
+      onClose={() => {onClose();clearFields();}}
+      title={`${ingredient ? "Edit" : "Add"} Ingredient`}
+      footerButtons={ingredient ? editButtonConfig : addButtonConfig}
+    >
+      <div style={{ display: "flex", flexDirection: "column", gap: "20px", margin: "20px 0" }}>
+        { ingredient ? 
+          <div>{ingredient.name}</div> 
+          : 
+          <Search 
+            searchRef={inputRef}
+            search={search}
+            setSearch={setSearch}
+            setSelected={setSelected}
+            searchMethod={handleSearch}
+          />
+        }
+        <textarea
+          id="ingredient-description"
+          placeholder="Description (optional)"
+          value={description}
+          className="input-field"
+          onChange={(e) => setDescription(e.target.value)}
+          style={{
+            fontFamily: "Optima, Segoe, Segoe UI, Candara, Calibri, Arial, sans-serif",
+            maxWidth: "100%",
+            minWidth: "100%",
+            height: "80px"
+          }}
+        />
       </div>
-    </div>
+      { ingredient &&
+        <div>
+          <hr/>
+          <div style={{ display: "flex", flexDirection: "column", gap: "20px", margin: "20px 0" }}>
+            <div>
+              <h3 style={{ margin: "0 0 8px" }}>Category</h3>
+              <DropdownSelect 
+                options={categories}
+                value={selectedCategory}
+                onChange={setSelectedCategory}
+              />
+            </div>
+            <div>
+              <h3 style={{ margin: "0 0 8px" }}>Store</h3>
+              <DropdownSelect 
+                options={stores}
+                value={selectedStore}
+                onChange={setSelectedStore}
+              />
+            </div>
+          </div>
+        </div>
+      }
+    </Modal>
   );
 }
 

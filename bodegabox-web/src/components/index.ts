@@ -13,6 +13,7 @@ import { Toggle } from "./Toggle";
 import { RgbModal } from "./RgbModal";
 import { Modal } from "./Modal";
 import { ActionButton } from "./ActionButton";
+import { ManageModal } from "./ManageModal";
 
 export { 
     Navigation, 
@@ -29,5 +30,6 @@ export {
     Toggle,
     RgbModal,
     Modal,
-    ActionButton
+    ActionButton,
+    ManageModal
 };

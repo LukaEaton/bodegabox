@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { useTheme } from "../context/ThemeContext";
 import { RgbColorPicker, RgbColor } from "react-colorful";
-import { FaCheck, FaTimes } from "react-icons/fa";
+import { FaCheck } from "react-icons/fa";
+import { ActionButtonConfig } from "./ActionButton";
+import { Modal } from "../components"
 
 type RgbModalProps = {
     isOpen: boolean;
@@ -34,29 +36,28 @@ export function RgbModal({ isOpen, onClose }: RgbModalProps) {
         setSecondaryColor(getRgbaString(secondaryColorRgb));
         onClose();
     };
+
+    const setButtonConfig: ActionButtonConfig[] = [
+        {
+            icon: <FaCheck />,
+            onClick: handleSetSecondaryColor,
+            className: "add-button enabled-button"
+        }
+    ];
     
     useEffect(() => {
         setSecondarColorRgb(rgbaToRgbColor(secondaryColor));
     }, [secondaryColor]);
 
     return (
-        <div className="modal-overlay">
-            <div className="modal-container" style={{width:"fit-content", padding:"15px"}}>
-                <div className="modal-header">
-                    <h3 style={{ margin: "0px" }}>Secondary Color</h3>
-                    <FaTimes className="close-button" onClick={onClose} />
-                </div>
-                <hr/>
-                <div className="modal-body">
-                    <RgbColorPicker style={{ width: "200px", height: "200px", margin: "20px auto" }} color={secondaryColorRgb} onChange={setSecondarColorRgb} />
-                </div>
-                <hr/>
-                <div className="modal-footer">
-                    <button className="add-button enabled-button" style={{display:"flex",gap:"5px",alignItems:"center"}} onClick={handleSetSecondaryColor}>
-                        <FaCheck />
-                    </button>
-                </div>
-            </div>
-        </div>
+        <Modal
+            isOpen={isOpen}
+            onClose={onClose}
+            title="Secondary Color"
+            containerClass="rgb-modal"
+            footerButtons={setButtonConfig}
+        >
+            <RgbColorPicker style={{ width: "200px", height: "200px", margin: "20px auto" }} color={secondaryColorRgb} onChange={setSecondarColorRgb} />
+        </Modal>
     );
 }

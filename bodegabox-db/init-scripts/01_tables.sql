@@ -11,12 +11,12 @@ CREATE TABLE IF NOT EXISTS stores (
 CREATE TABLE IF NOT EXISTS ingredients (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
-    category_id INT REFERENCES categories(id),
-    store_id INT REFERENCES stores(id)
+    category_id INT REFERENCES categories(id) ON DELETE SET NULL,
+    store_id INT REFERENCES stores(id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS saved_ingredients (
-    ingredient_id INT PRIMARY KEY REFERENCES ingredients(id),
+    ingredient_id INT PRIMARY KEY REFERENCES ingredients(id) ON DELETE CASCADE,
     description TEXT,
     valid BOOLEAN NOT NULL DEFAULT TRUE,
     saved TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
