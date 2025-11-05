@@ -194,3 +194,19 @@ func (s *Service) VerifyIngredientExistsByName(name string) (bool, error) {
 	}
 	return count > 0, nil
 }
+
+// VerifyIngredientExists checks if an ingredient with the give id exists
+func (s *Service) VerifyIngredientExists(id int) (bool, error) {
+	var count int
+	err := s.db.QueryRow(`SELECT COUNT(*) FROM ingredients WHERE id = $1`, id).Scan(&count)
+	if err != nil {
+		return false, err
+	}
+	return count > 0, nil
+}
+
+// DeleteIngredient deletes a ingredient by ID.
+func (s *Service) DeleteIngredient(id int) error {
+	_, err := s.db.Exec(`DELETE FROM ingredients WHERE id = $1`, id)
+	return err
+}

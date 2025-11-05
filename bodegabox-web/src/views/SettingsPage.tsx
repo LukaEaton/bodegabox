@@ -45,31 +45,6 @@ export function SettingsPage() {
     const [stores, setStores] = useState<Store[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
     const [selectedStore, setSelectedStore] = useState<number | null>(null);
-    const addButtonConfig = [
-        {
-            label: "Add",
-            icon: <FaCirclePlus style={{ marginRight: "5px" }} />,
-            onClick: () => handleAdd,
-            className: "add-button",
-            disabled: name === ""
-        }
-    ];
-    const editAndDeleteButtonConfig = [
-        {
-            label: "Save",
-            icon: <FaCheck style={{ marginRight: "5px" }} />,
-            onClick: () => handleEdit,
-            className: "add-button",
-            disabled: selected === null
-        },
-        {
-            label: "Delete",
-            icon: <FaTimes style={{ marginRight: "5px" }} />,
-            onClick: () => handleDelete,
-            className: "delete-button",
-            disabled: selected === null
-        }
-    ];
     const openManageModal = (entity: "Ingredient" | "Category" | "Store", mode: "Add" | "Edit") => {
         setManageEntity(entity);
         setMode(mode);
@@ -106,18 +81,18 @@ export function SettingsPage() {
         switch(manageEntity) {
             case "Ingredient":
                 await IngredientService.createIngredient({ name, categoryId: selectedCategory, storeId: selectedStore })
-                        .then(() => setAlert("Ingredient Created", "Success"))
-                        .catch(() => setAlert("Failed to Create Ingredient", "Error"));
+                        .then(() => {setAlert("Ingredient Created", "Success"); onCloseManageModal();})
+                        .catch((e) => setAlert(e.message, "Error"));
                 break;
             case "Category":
                 await CategoryService.createCategory({ name })
-                        .then(() => setAlert("Category Created", "Success"))
-                        .catch(() => setAlert("Failed to Create Category", "Error"));
+                        .then(() => {setAlert("Category Created", "Success"); onCloseManageModal();})
+                        .catch((e) => setAlert(e.message, "Error"));
                 break;
             case "Store":
                 await StoreService.createStore({ name })
-                        .then(() => setAlert("Store Created", "Success"))
-                        .catch(() => setAlert("Failed to Create Store", "Error"));
+                        .then(() => {setAlert("Store Created", "Success"); onCloseManageModal();})
+                        .catch((e) => setAlert(e.message, "Error"));
                 break;
             default:
                 console.error("Unknown management entity:", manageEntity);
@@ -131,18 +106,18 @@ export function SettingsPage() {
         switch(manageEntity) {
             case "Ingredient":
                 await IngredientService.updateIngredient({id: (selected as Ingredient).id, name, categoryId: selectedCategory, storeId: selectedStore})
-                        .then(() => setAlert("Ingredient Updated", "Success"))
-                        .catch(() => setAlert("Failed to Update Ingredient", "Error"));
+                        .then(() => {setAlert("Ingredient Updated", "Success"); onCloseManageModal();})
+                        .catch((e) => setAlert(e.message, "Error"));
                 break;
             case "Category":
                 await CategoryService.updateCategory({id: (selected as Category).id!, name })
-                        .then(() => setAlert("Category Updated", "Success"))
-                        .catch(() => setAlert("Failed to Update Category", "Error"));
+                        .then(() => {setAlert("Category Updated", "Success"); onCloseManageModal();})
+                        .catch((e) => setAlert(e.message, "Error"));
                 break;
             case "Store":
                 await StoreService.updateStore({id: (selected as Store).id, name })
-                        .then(() => setAlert("Store Updated", "Success"))
-                        .catch(() => setAlert("Failed to Update Store", "Error"));
+                        .then(() => {setAlert("Store Updated", "Success"); onCloseManageModal();})
+                        .catch((e) => setAlert(e.message, "Error"));
                 break;
             default:
                 console.error("Unknown management entity:", manageEntity);
@@ -156,23 +131,48 @@ export function SettingsPage() {
         switch(manageEntity) {
             case "Ingredient":
                 await IngredientService.deleteIngredient((selected as Ingredient).id)
-                        .then(() => setAlert("Ingredient Deleted", "Success"))
-                        .catch(() => setAlert("Failed to Delte Ingredient", "Error"));
+                        .then(() => {setAlert("Ingredient Deleted", "Success"); onCloseManageModal();})
+                        .catch((e) => setAlert(e.message, "Error"));
                 break;
             case "Category":
                 await CategoryService.deleteCategory((selected as Category).id!)
-                        .then(() => setAlert("Category Deleted", "Success"))
-                        .catch(() => setAlert("Failed to Delte Category", "Error"));
+                        .then(() => {setAlert("Category Deleted", "Success"); onCloseManageModal();})
+                        .catch((e) => setAlert(e.message, "Error"));
                 break;
             case "Store":
                 await StoreService.deleteStore((selected as Store).id)
-                        .then(() => setAlert("Store Deleted", "Success"))
-                        .catch(() => setAlert("Failed to Delte Store", "Error"));
+                        .then(() => {setAlert("Store Deleted", "Success"); onCloseManageModal();})
+                        .catch((e) => setAlert(e.message, "Error"));
                 break;
             default:
                 console.error("Unknown management entity:", manageEntity);
         }
     }
+    const addButtonConfig = [
+        {
+            label: "Add",
+            icon: <FaCirclePlus style={{ marginRight: "5px" }} />,
+            onClick: handleAdd,
+            className: "add-button",
+            disabled: name === ""
+        }
+    ];
+    const editAndDeleteButtonConfig = [
+        {
+            label: "Save",
+            icon: <FaCheck style={{ marginRight: "5px" }} />,
+            onClick: handleEdit,
+            className: "add-button",
+            disabled: selected === null
+        },
+        {
+            label: "Delete",
+            icon: <FaTimes style={{ marginRight: "5px" }} />,
+            onClick: handleDelete,
+            className: "delete-button",
+            disabled: selected === null
+        }
+    ];
     useEffect(() => {
         if(manageEntity === "Ingredient") {
             CategoryService.getCategories().then(setCategories);

@@ -14,7 +14,15 @@ const RequestService = {
     });
 
     if (!response.ok) {
-      const err = new Error("Request failed");
+      let errorMessage = "Request failed";
+      try {
+        const data = await response.json();
+        if (data?.error) errorMessage = data.error;
+      } catch {
+        const text = await response.text();
+        if (text) errorMessage = text;
+      }
+      const err = new Error(errorMessage);
       (err as any).status = response.status;
       throw err;
     }

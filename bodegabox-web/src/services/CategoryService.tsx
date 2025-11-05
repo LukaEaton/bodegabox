@@ -33,7 +33,7 @@ const CategoryService = {
     },
 
     async deleteCategory(id: number): Promise<void> {
-        await RequestService.apiRequest<void>(`${apiBaseUrl}/categories/${id}/`, {
+        await RequestService.apiRequest<void>(`${apiBaseUrl}/categories/${id}`, {
             method: "DELETE"
         });
     }

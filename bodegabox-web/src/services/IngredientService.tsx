@@ -41,14 +41,14 @@ const IngredientService = {
   },
 
   async updateIngredient(ingredient: Ingredient) {
-    await RequestService.apiRequest(`${apiBaseUrl}/ingredients/`, {
+    await RequestService.apiRequest(`${apiBaseUrl}/ingredients/updateDetails`, {
         method: "PUT",
         body: ingredient
     });
   },
 
   async deleteIngredient(ingredientId: number) {
-    await RequestService.apiRequest(`${apiBaseUrl}/ingredients/${ingredientId}/`, {
+    await RequestService.apiRequest(`${apiBaseUrl}/ingredients/${ingredientId}`, {
         method: "DELETE"
     });
   },

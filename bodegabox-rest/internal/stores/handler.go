@@ -11,7 +11,7 @@ func RegisterRoutes(rg *gin.RouterGroup, service *Service) {
 	rg.GET("/", func(c *gin.Context) {
 		stores, err := service.GetAll()
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch stores"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch Stores"})
 			return
 		}
 		c.JSON(http.StatusOK, stores)
@@ -21,13 +21,13 @@ func RegisterRoutes(rg *gin.RouterGroup, service *Service) {
 		query := c.Query("q")
 		if query == "" {
 			log.Println("Search query is missing")
-			c.JSON(http.StatusBadRequest, gin.H{"error": "missing search query"})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Missing search query"})
 			return
 		}
 		results, err := service.SearchStores(query)
 		if err != nil {
 			log.Println(err)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to search stores"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to search Stores"})
 			return
 		}
 		c.JSON(http.StatusOK, results)
@@ -36,21 +36,21 @@ func RegisterRoutes(rg *gin.RouterGroup, service *Service) {
 	rg.PUT("/", func(c *gin.Context) {
 		var input Store
 		if err := c.ShouldBindJSON(&input); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid input"})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
 			return
 		}
 		exists, err := service.VerifyStoreExists(input.ID)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to verify store"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to verify if Store exists"})
 			return
 		}
 		if !exists {
-			c.JSON(http.StatusNotFound, gin.H{"error": "store not found"})
+			c.JSON(http.StatusNotFound, gin.H{"error": "Store doesn't exist"})
 			return
 		}
 		updatedStore, err := service.UpdateStore(input.ID, input.Name)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to update store"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update Store"})
 			return
 		}
 		c.JSON(http.StatusOK, updatedStore)
@@ -61,21 +61,21 @@ func RegisterRoutes(rg *gin.RouterGroup, service *Service) {
 			Name string `json:"name" binding:"required"`
 		}
 		if err := c.ShouldBindJSON(&input); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid input"})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
 			return
 		}
 		exists, err := service.VerifyStoreExistsByName(input.Name)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to verify store"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to verify if Store exists"})
 			return
 		}
 		if exists {
-			c.JSON(http.StatusConflict, gin.H{"error": "store with this name already exists"})
+			c.JSON(http.StatusConflict, gin.H{"error": "This Store already exists"})
 			return
 		}
 		store, err := service.CreateStore(input.Name)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create store"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create Store"})
 			return
 		}
 		c.JSON(http.StatusOK, store)
@@ -84,22 +84,22 @@ func RegisterRoutes(rg *gin.RouterGroup, service *Service) {
 	rg.DELETE("/:id", func(c *gin.Context) {
 		id, err := strconv.Atoi(c.Param("id"))
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid store ID"})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Store ID"})
 			return
 		}
 		exists, err := service.VerifyStoreExists(id)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to verify store"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to verify if Store exists"})
 			return
 		}
 		if !exists {
-			c.JSON(http.StatusNotFound, gin.H{"error": "store not found"})
+			c.JSON(http.StatusNotFound, gin.H{"error": "Store doesn't exist"})
 			return
 		}
 		if err := service.DeleteStore(id); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to delete store"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete store"})
 			return
 		}
-		c.Status(http.StatusNoContent)
+		c.JSON(http.StatusOK, nil)
 	})
 }

@@ -30,7 +30,9 @@ export function ShoppingListPage() {
 			.then(ingredients =>
 				setAllIngredients(ingredients)
 			)
-			.catch(error => console.error(error));
+			.catch((e) => {
+				setAlert(e.message, "Error");
+			});	
 	};
 
 	const getStores = () => {
@@ -38,7 +40,9 @@ export function ShoppingListPage() {
 			.then(storesList => {
 				setStores(storesList);
 			})
-			.catch(error => console.error(error));
+			.catch((e) => {
+				setAlert(e.message, "Error");
+			});	
 	};
 
 	const getCategories = () => {
@@ -46,7 +50,9 @@ export function ShoppingListPage() {
 			.then(categoriesList =>
 			setCategories(categoriesList)
 			)
-			.catch(error => console.error(error));
+			.catch((e) => {
+				setAlert(e.message, "Error");
+			});	
 	}
 
 	const handleAddIngredient = (ingredient: PendingIngredient) => {
@@ -55,14 +61,8 @@ export function ShoppingListPage() {
 			setAddIngredientModalOpen(false);
 			setAlert("Ingredient Added!", "Success");
 		})
-		.catch(error => {
-			if ((error as any).status === 409) {
-				setAlert("Ingredient is already on the list!");
-				console.log((error as any).message);
-			}
-			else {
-				setAlert((error as any).message);
-			}
+		.catch((e) => {
+			setAlert(e.message, "Error");
 		});	
 	};
 
@@ -73,13 +73,8 @@ export function ShoppingListPage() {
 			setEditIngredient(null);
 			setAlert("Ingredient Edited!", "Success");
 		})
-		.catch(error => {
-			if ((error as any).status === 409) {
-				setAlert("Ingredient is purchased or not on the list!");
-			}
-			else {
-				setAlert((error as any).message);
-			}
+		.catch((e) => {
+			setAlert(e.message, "Error");
 		});	
 	}
 

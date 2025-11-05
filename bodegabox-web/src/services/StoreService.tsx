@@ -33,7 +33,7 @@ const StoreService = {
     },
 
     async deleteStore(id: number): Promise<void> {
-        await RequestService.apiRequest<void>(`${apiBaseUrl}/stores/${id}/`, {
+        await RequestService.apiRequest<void>(`${apiBaseUrl}/stores/${id}`, {
             method: "DELETE"
         });
     }
