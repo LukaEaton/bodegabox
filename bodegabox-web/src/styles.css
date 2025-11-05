@@ -78,10 +78,6 @@ hr {
     height: calc(100vh - 45px);
 }
 
-.list-dropdown {
-    width: 85%;
-}
-
 .floating-button {
   position: fixed;
   bottom: 70px;
@@ -312,6 +308,7 @@ hr {
     cursor: pointer;
 }
 
-.modal-width-fit-content {
+.rgb-modal {
     width: fit-content;
+    padding: 15px;
 }

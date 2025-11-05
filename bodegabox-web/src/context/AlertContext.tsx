@@ -21,7 +21,6 @@ export const AlertProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const setAlert = useCallback((message: string, type: AlertType = "Error") => {
     setAlertState({ message, type });
 
-    // auto-dismiss after 4 seconds
     setTimeout(() => setAlertState(null), 4000);
   }, []);
 

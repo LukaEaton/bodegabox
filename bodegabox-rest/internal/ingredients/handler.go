@@ -31,21 +31,6 @@ func RegisterRoutes(rg *gin.RouterGroup, service *Service) {
 		c.JSON(http.StatusOK, savedIngredients)
 	})
 
-	// GET /ingredients/:id
-	rg.GET("/:id", func(c *gin.Context) {
-		id, err := strconv.Atoi(c.Param("id"))
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Ingredient ID"})
-			return
-		}
-		ing, err := service.GetByID(id)
-		if err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": "Failed to fetch Ingredient"})
-			return
-		}
-		c.JSON(http.StatusOK, ing)
-	})
-
 	// Get /ingredients/search?q=<term>
 	rg.GET("/search", func(c *gin.Context) {
 		query := c.Query("q")
@@ -190,8 +175,8 @@ func RegisterRoutes(rg *gin.RouterGroup, service *Service) {
 	rg.POST("/", func(c *gin.Context) {
 		var input struct {
 			Name       string `json:"name" binding:"required"`
-			CategoryID int    `json:"categoryId" binding:"required"`
-			StoreID    int    `json:"storeId" binding:"required"`
+			CategoryID *int    `json:"categoryId" binding:"required"`
+			StoreID    *int    `json:"storeId" binding:"required"`
 		}
 		if err := c.ShouldBindJSON(&input); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
