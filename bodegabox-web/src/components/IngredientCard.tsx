@@ -13,18 +13,18 @@ type IngredientCardProps = {
 export function IngredientCard({ ingredient, onEdit, onPurchase, onRevertPurchase }: IngredientCardProps) {
     return (
         <div
+            className="ingredient-card"
             style={{
                 display: "flex",
                 alignItems: "center",
                 padding: "5px",
-                backgroundColor: "rgba(0, 226, 242, 0.1)",
                 margin: "5px 10px 5px 0px",
                 borderRadius: "5px",
                 gap: "10px"
             }}
         >
             <h4 style={{ margin: "0px" }}>{ingredient.name}</h4>
-            <p style={{ margin: "0px", color: "#9f9f9fff", fontStyle: "italic", fontSize: "15px" }}>{ingredient.description}</p>
+            <p className="secondary-text" style={{ margin: "0px", fontStyle: "italic", fontSize: "15px" }}>{ingredient.description}</p>
             <div style={{ marginLeft: "auto", display: "flex", gap: "10px", alignItems: "center", marginRight: "5px" }}>
                 { ingredient.valid ? 
                     <>

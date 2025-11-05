@@ -45,7 +45,7 @@ export function IngredientModal({ isOpen, onClose, ingredient, onAdd, onEdit, ca
   const handleEdit = () => {
     if((selectedCategory && selectedCategory !== ingredient!.categoryId) ||
        (selectedStore && selectedStore !== ingredient!.storeId)) {
-      IngredientService.updateIngredientDetails({id: ingredient!.id, name: ingredient!.name, categoryId: selectedCategory!, storeId: selectedStore!}) 
+      IngredientService.updateIngredient({id: ingredient!.id, name: ingredient!.name, categoryId: selectedCategory!, storeId: selectedStore!}) 
         .then(() => onEdit({ ingredientId: ingredient!.id, description: description.trim()}))
         .catch(() => {
           setAlert("Failed to update ingredient's Category and/or Store.");
@@ -120,7 +120,7 @@ export function IngredientModal({ isOpen, onClose, ingredient, onAdd, onEdit, ca
               value={description}
               className="input-field"
               onChange={(e) => setDescription(e.target.value)}
-              style={{ width: "100%", 
+              style={{
                 fontFamily: "Optima, Segoe, Segoe UI, Candara, Calibri, Arial, sans-serif",
                 maxWidth: "100%",
                 minWidth: "100%",
@@ -138,10 +138,6 @@ export function IngredientModal({ isOpen, onClose, ingredient, onAdd, onEdit, ca
                     options={categories}
                     value={selectedCategory}
                     onChange={setSelectedCategory}
-                    backgroundColor="#3A3A3A"
-                    selectedBackgroundColor="#2e2e2eff"
-                    fontColor="#FFFFFF"
-                    borderColor="#555555"
                   />
                 </div>
                 <div>
@@ -150,10 +146,6 @@ export function IngredientModal({ isOpen, onClose, ingredient, onAdd, onEdit, ca
                     options={stores}
                     value={selectedStore}
                     onChange={setSelectedStore}
-                    backgroundColor="#3A3A3A"
-                    selectedBackgroundColor="#2e2e2eff"
-                    fontColor="#FFFFFF"
-                    borderColor="#555555"
                   />
                 </div>
               </div>

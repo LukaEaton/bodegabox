@@ -1,20 +1,45 @@
+:root {
+    --bg-color: #ffffff;
+    --bg-color-secondary: #f0f0f0;
+    --bg-color-tertiary: #e0e0e0;
+    --text-color: #2f2f2f;
+    --secondary-text: #474646;
+    --secondary-color: rgba(0, 130, 139, 1);
+    --secondary-color-opaque: rgba(0, 130, 139, 0.7);
+    --secondary-color-transparent: rgba(0, 130, 139, 0.4);
+    --scrollbar-track: #9b9a9a;
+    --scrollbar-thumb: #f0f0f0;
+}
+
+[data-theme="dark"] {
+    --bg-color: #2c2b2b;
+    --bg-color-secondary: #272727ff;
+    --bg-color-tertiary: #4a4a4a;
+    --text-color: #ffffff;
+    --secondary-text: #bbbbbb;
+    --secondary-color: rgba(0, 130, 139, 1);
+    --secondary-color-opaque: rgba(0, 130, 139, 0.7);
+    --secondary-color-transparent: rgba(0, 130, 139, 0.4);
+    --scrollbar-track: #555;
+    --scrollbar-thumb: #333;
+}
+
 html, body, #root {
     height: 100%;
     margin: 0;
-    scrollbar-color: #555 #333;
+    scrollbar-color: var(--scrollbar-track) var(--scrollbar-thumb);
 }
 
 body {
     font-family: Optima, Segoe, "Segoe UI", Candara, Calibri, Arial, sans-serif; 
-    background-color: rgb(44, 43, 43);
-    color: white;
+    background-color: var(--bg-color);
+    color: var(--text-color);
     font-size: 1rem;
 }
 
 button {
     font-family: Optima, Segoe, "Segoe UI", Candara, Calibri, Arial, sans-serif; 
     font-size: 1rem;
-    color: white;
 }
 
 nav {
@@ -25,21 +50,25 @@ nav {
     height: 45px;
     display: flex;
     justify-content: space-evenly;
-    background-color: #272727ff;
+    background-color: var(--bg-color-secondary);
     z-index: 10;
 }
 
 nav button {
     width: 100%;
     border: none;
-    border-top: 1px solid rgb(15, 15, 15);
+    border-top: 1px solid var(--scrollbar-track);
     padding: 0.75rem;
-    background-color: rgb(44, 43, 43);
-    color: white;
+    background-color: var(--bg-color-secondary);
+    color: var(--text-color);
 }
 
 nav button.active {
-    border-top: 1px solid white;
+    border-top: 2px solid var(--secondary-color);
+}
+
+hr {
+    margin: 15px 0;
 }
 
 .tab {
@@ -60,7 +89,7 @@ nav button.active {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: rgb(0, 130, 139);
+  background-color: var(--secondary-color);
   color: white;
   border: none;
   cursor: pointer;
@@ -89,7 +118,7 @@ nav button.active {
 }
 
 .modal-container {
-    background-color: rgb(44, 43, 43);
+    background-color: var(--bg-color);
     border-radius: 8px;
     width: 80%;
     max-width: 400px;
@@ -97,31 +126,34 @@ nav button.active {
 }
 
 .modal-header {
-    padding-bottom: 10px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .modal-footer {
     display: flex;
     padding-top: 10px;
     justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
 }
 
 .input-field {
-    background-color: #3A3A3A;
-    color: white;
-    border: 1px solid rgb(85, 85, 85);
+    background-color: var(--bg-color-secondary);
+    color: var(--text-color);
+    border: 1px solid var(--scrollbar-track);
     border-radius: 4px;
     padding: 5px;
     box-sizing: border-box;
     font-size: 0.85rem;
+    width: 100%;
 }
 
 .close-button {
     background: none;
     border: none;
-    color: white;
+    color: var(--text-color);
     font-size: 1.2rem;
     cursor: pointer;
 }
@@ -130,12 +162,31 @@ nav button.active {
     color: #ff4d4d;
 }
 
+.dropdown-close {
+    cursor: pointer;
+}
+
+.dropdown-close:hover {
+    color: #ff4d4d;
+}
+
+.dropdown-button {
+    background-color: var(--bg-color-tertiary);
+    border: 1px solid var(--scrollbar-track);
+    color: var(--text-color);
+}
+
+.delete-button {
+    background-color: #ff4d4d;
+}
+
 .add-button {
     display: flex;
     align-items: center;
     border-radius: 15px;
     padding: 4px 10px;
-    background-color: #28a745;
+    background-color: #36da5c;
+    color: var(--text-color);
     border: none;
     cursor: pointer;
 }
@@ -145,11 +196,14 @@ nav button.active {
 }
 
 .enabled-button:hover {
-    background-color: #36da5c;
+    background-color: #3cf166;
 }
 
 .disabled-button {
     opacity: 0.6;
+}
+
+.disabled-button:hover {
     cursor: not-allowed;
 }
 
@@ -158,8 +212,8 @@ nav button.active {
     top: 100%;
     left: 0;
     width: 100%;
-    background-color: #3A3A3A;
-    border: 1px solid rgb(85, 85, 85);
+    background-color: var(--bg-color-secondary);
+    border: 1px solid var(--scrollbar-track);
     border-radius: 4px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     max-height: 200px;
@@ -179,7 +233,7 @@ nav button.active {
 }
 
 .floating-results li:hover {
-    background-color: #505050;
+    background-color: var(--bg-color-tertiary);
 }
 
 /* Alert Context Keyframes */
@@ -190,4 +244,74 @@ nav button.active {
 @keyframes shrink {
   from { width: 100%; }
   to { width: 0%; }
+}
+
+.accordion-button {
+    color: var(--text-color);
+}
+
+.accordion-list {
+    margin: 0;
+    padding: 10px 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.accordion-option {
+    list-style-type: none;
+}
+
+.tab-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--bg-color-secondary);
+    padding: 15px;
+    border-bottom: 1px solid var(--secondary-color);
+}
+
+.logo {
+    fill: var(--text-color);
+}
+
+.secondary-button-color {
+    background-color: var(--secondary-color-opaque);
+    color: var(--text-color)
+}
+
+.secondary-text {
+    color: var(--secondary-text);
+}
+
+.ingredient-card {
+    background-color: var(--secondary-color-transparent);
+}
+
+.flex-grow {
+    flex-grow: 1;
+}
+
+.settings-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.secondary-color-bg {
+    background-color: var(--secondary-color);
+}
+
+.action-button {
+    display: flex;
+    align-items: center;
+    border-radius: 15px;
+    padding: 4px 10px;
+    color: var(--text-color);
+    border: none;
+    cursor: pointer;
+}
+
+.modal-width-fit-content {
+    width: fit-content;
 }

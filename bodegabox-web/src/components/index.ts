@@ -9,6 +9,10 @@ import { IngredientModal } from "./IngredientModal";
 import { Search } from "./Search";
 import { BodegaBoxLogo } from "./BodegaBoxLogo";
 import { TabHeader } from "./TabHeader";
+import { Toggle } from "./Toggle";
+import { RgbModal } from "./RgbModal";
+import { Modal } from "./Modal";
+import { ActionButton } from "./ActionButton";
 
 export { 
     Navigation, 
@@ -21,5 +25,9 @@ export {
     IngredientModal,
     Search,
     BodegaBoxLogo,
-    TabHeader
+    TabHeader,
+    Toggle,
+    RgbModal,
+    Modal,
+    ActionButton
 };

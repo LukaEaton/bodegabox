@@ -7,7 +7,7 @@ type TabHeaderProps = {
 
 export function TabHeader({ title, children }: TabHeaderProps) {
     return (
-        <div style={{ position: "sticky", top: 0, zIndex: 10, backgroundColor: "#272727ff", padding: "15px 15px", borderBottom: "4px solid rgba(0, 226, 242, 0.4)" }}>
+        <div className="tab-header">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center",
                 margin: "0px"
             }}>

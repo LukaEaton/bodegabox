@@ -30,7 +30,9 @@ export function ShoppingListPage() {
 			.then(ingredients =>
 				setAllIngredients(ingredients)
 			)
-			.catch(error => console.error(error));
+			.catch((e) => {
+				setAlert(e.message, "Error");
+			});	
 	};
 
 	const getStores = () => {
@@ -38,7 +40,9 @@ export function ShoppingListPage() {
 			.then(storesList => {
 				setStores(storesList);
 			})
-			.catch(error => console.error(error));
+			.catch((e) => {
+				setAlert(e.message, "Error");
+			});	
 	};
 
 	const getCategories = () => {
@@ -46,7 +50,9 @@ export function ShoppingListPage() {
 			.then(categoriesList =>
 			setCategories(categoriesList)
 			)
-			.catch(error => console.error(error));
+			.catch((e) => {
+				setAlert(e.message, "Error");
+			});	
 	}
 
 	const handleAddIngredient = (ingredient: PendingIngredient) => {
@@ -55,14 +61,8 @@ export function ShoppingListPage() {
 			setAddIngredientModalOpen(false);
 			setAlert("Ingredient Added!", "Success");
 		})
-		.catch(error => {
-			if ((error as any).status === 409) {
-				setAlert("Ingredient is already on the list!");
-				console.log((error as any).message);
-			}
-			else {
-				setAlert((error as any).message);
-			}
+		.catch((e) => {
+			setAlert(e.message, "Error");
 		});	
 	};
 
@@ -73,13 +73,8 @@ export function ShoppingListPage() {
 			setEditIngredient(null);
 			setAlert("Ingredient Edited!", "Success");
 		})
-		.catch(error => {
-			if ((error as any).status === 409) {
-				setAlert("Ingredient is purchased or not on the list!");
-			}
-			else {
-				setAlert((error as any).message);
-			}
+		.catch((e) => {
+			setAlert(e.message, "Error");
 		});	
 	}
 
@@ -109,31 +104,29 @@ export function ShoppingListPage() {
 
 	return (
 		<div className="tab">
-			<TabHeader title="Shopping List">
-				<button
-                    style={{
-                        padding: "5px 10px",
-                        borderRadius: "5px",
-                        height: "fit-content",
-                        background: "rgba(0, 226, 242, 0.4)",
-                    }}
-                    onClick={() => setExpandAll(!expandAll)}
-                >
-                    {expandAll ? "Collapse All" : "Expand All"}
-                </button>
-			</TabHeader>
+			<TabHeader title="Shopping List"></TabHeader>
 			<div style={{ flex: 1, overflowY: "auto", paddingTop: "10px", padding: "10px 10px" }}>
-				<div style={{ marginBottom: "10px" }}>
+				<div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
 					<DropdownSelect 
 						options={[ {value: null, label: "Select Store..."}, ...stores.map(store => ({value: store.id, label: store.name}))]}
 						value={selectedStore}
 						onChange={setSelectedStore}
 						placeholder="Select Store..."
-						backgroundColor="#3A3A3A"
-						selectedBackgroundColor="#2e2e2eff"
-						fontColor="#FFFFFF"
-						borderColor="#555555"
+						className="flex-grow"
 					/>
+					<button
+						className="secondary-button-color"
+						style={{
+							padding: "5px 10px",
+							borderRadius: "15px",
+							border: "none",
+							height: "fit-content",
+							fontWeight: "bold"
+						}}
+						onClick={() => setExpandAll(!expandAll)}
+					>
+						{expandAll ? "Collapse All" : "Expand All"}
+					</button>
 				</div>
 				<PullToRefresh onRefresh={() => getShoppingList()}>
 					{categories.map(category => {
