@@ -10,7 +10,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
-      - bodegabox-data:/var/lib/postgresql/data
+      - ${DATA_PATH}/postgres:/var/lib/postgresql/data
       - ./bodegabox-db/init-scripts:/docker-entrypoint-initdb.d:ro
     ports:
       - "${DB_PORT}:5432"
@@ -33,20 +33,35 @@ services:
       DB_USER: ${POSTGRES_USER}
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       DB_NAME: ${POSTGRES_DB}
+      ENV: ${ENV}
+      GIN_MODE: release
+    volumes:
+      - ${DATA_PATH}/images:/app/data/images
     ports:
       - "${BACKEND_PORT}:8080"
 
-  frontend:
+  frontend-builder:
+    profiles: ["production"]
     build:
       context: ./bodegabox-web
       dockerfile: Dockerfile
-    container_name: bodegabox-web
+    container_name: bodegabox-frontend-builder
+    command: ["npm","run","build"]
+    volumes:
+      - ${DATA_PATH}/frontend_build:/app/build
+    restart: "no"
+
+  nginx:
+    image: nginx:alpine
+    profiles: ["production"]
+    container_name: bodegabox-nginx
+    restart: unless-stopped
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ${DATA_PATH}/frontend_build:/usr/share/nginx/html:ro
+      - ${DATA_PATH}/images:/usr/share/nginx/html/images:ro
+    ports:
+      - "80:80"
     depends_on:
       - backend
-    ports:
-      - "${FRONTEND_PORT}:3000"
-    environment:
-      - NODE_ENV=production
-
-volumes:
-  bodegabox-data:
+      - frontend-builder
