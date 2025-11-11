@@ -5,9 +5,10 @@ type PullToRefreshProps = {
   children: ReactNode;
   threshold?: number;
   maxPull?: number;
+  style?: React.CSSProperties;
 }
 
-export function PullToRefresh({onRefresh,children,threshold = 100,maxPull = 150,}: PullToRefreshProps) {
+export function PullToRefresh({onRefresh,children,threshold = 100,maxPull = 150,style}: PullToRefreshProps) {
   const [pull, setPull] = useState<number>(0);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const startY = useRef<number>(0);
@@ -40,7 +41,7 @@ export function PullToRefresh({onRefresh,children,threshold = 100,maxPull = 150,
 
   return (
     <div
-      style={{ touchAction: "none" }}
+      style={{ ...style, touchAction: "none" }}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}

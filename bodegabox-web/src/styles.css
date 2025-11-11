@@ -242,8 +242,64 @@ hr {
   to { width: 0%; }
 }
 
+.accordion {
+  width: 100%;
+}
+
 .accordion-button {
     color: var(--text-color);
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    justify-content: normal;
+    transition: background-color 0.2s ease;
+}
+
+.accordion-button-flipped {
+    justify-content: space-between;
+}
+
+.accordion-title {
+    margin: 0;
+}
+
+.accordion-arrow {
+  transition: transform 0.25s ease;
+}
+
+.accordion-arrow.rotate {
+  transform: rotate(90deg);
+}
+
+.accordion-content-wrapper {
+  overflow: hidden;
+  transition: max-height 0.35s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.accordion-content-wrapper.open {
+  opacity: 1;
+}
+
+.accordion-content {
+  animation: fadeInMenu 0.3s ease;
+}
+
+@keyframes fadeInMenu {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .accordion-list {
