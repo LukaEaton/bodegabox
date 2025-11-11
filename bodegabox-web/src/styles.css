@@ -167,9 +167,61 @@ hr {
 }
 
 .dropdown-button {
-    background-color: var(--bg-color-tertiary);
-    border: 1px solid var(--scrollbar-track);
-    color: var(--text-color);
+  width: 100%;
+  padding: 5px 7px;
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--bg-color-tertiary);
+  border: 1px solid var(--scrollbar-track);
+  color: var(--text-color);
+}
+
+.dropdown-icons {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.dropdown-arrow {
+  transition: transform 0.25s ease;
+}
+
+.dropdown-arrow.rotate {
+  transform: rotate(180deg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  margin-top: 5px;
+  border-radius: 4px;
+  border: 1px solid var(--bg-color-tertiary);
+  background-color: var(--bg-color);
+  overflow: auto;
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-5px);
+  transition:
+    max-height 0.3s ease,
+    opacity 0.15s ease,
+    transform 0.25s ease;
+}
+
+.dropdown-menu.open {
+  opacity: 1;
+  transform: translateY(0);
+  max-height: 200px;
+}
+
+.dropdown-item {
+  padding: 5px 7px;
+  cursor: pointer;
 }
 
 .delete-button {
