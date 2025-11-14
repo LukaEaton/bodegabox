@@ -18,10 +18,10 @@ services:
     build:
       context: ./bodegabox-rest
       dockerfile: Dockerfile.dev
-    container_name: bodegabox-rest
     volumes:
       - ./bodegabox-rest:/app
       - /go/pkg/mod
+      - bodegabox-images:/app/data/images
     command: air
     ports:
       - "${BACKEND_PORT}:8080"
@@ -31,5 +31,15 @@ services:
       DB_USER: ${POSTGRES_USER}
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       DB_NAME: ${POSTGRES_DB}
+      ENV: ${ENV}
+      GIN_MODE: debug
     depends_on:
       - db
+
+  db:
+    volumes:
+      - bodegabox-data:/var/lib/postgresql/data
+
+volumes:
+  bodegabox-data:
+  bodegabox-images:

@@ -1,17 +1,26 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { IoIosArrowForward } from "react-icons/io";
 
 type AccordionProps = {
   title: string;
   children: React.ReactNode;
   forceExpand?: boolean | null;
-  style? : React.CSSProperties;
-  flipped? : boolean;
+  style?: React.CSSProperties;
+  flipped?: boolean;
   startClosed?: boolean;
 };
 
-export function Accordion({ title, children, forceExpand, style, flipped, startClosed }: AccordionProps) {
-  const [open, setOpen] = useState(startClosed ? false: true);
+export function Accordion({
+  title,
+  children,
+  forceExpand,
+  style,
+  flipped,
+  startClosed,
+}: AccordionProps) {
+  const [open, setOpen] = useState(startClosed ? false : true);
+  const [height, setHeight] = useState<string | number>(0);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (forceExpand != null) {
@@ -19,44 +28,54 @@ export function Accordion({ title, children, forceExpand, style, flipped, startC
     }
   }, [forceExpand]);
 
+  useEffect(() => {
+    const element = contentRef.current;
+    if (!element) return;
+    const updateHeight = () => {
+      if (open) {
+        setHeight(element.scrollHeight);
+      } else {
+        setHeight(0);
+      }
+    };
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(element);
+    updateHeight();
+    return () => observer.disconnect();
+  }, [open, children]);
+
   return (
-    <div style={style}>
-      <div style={{ alignItems: "center", gap: "8px" }}>
-        <button
-            className="accordion-button"
-            style={{
-                width: "100%",
-                textAlign: "left",
-                background: "transparent",
-                border: "none",
-                cursor: "pointer",
-                fontWeight: "bold",
-                display: "flex",
-                gap: "5px",
-                alignItems: "center",
-                justifyContent: flipped ? "space-between" : "normal"
-            }}
-            onClick={() => setOpen((o) => !o)}
-        >
-          { flipped ? 
-            <>
-              <h3 style={{ margin: "0px" }}>{title}</h3>
-              <IoIosArrowForward style={open ? { transform: "rotate(90deg)"} : {}}/>
-            </>
-            :
-            <>
-              <IoIosArrowForward style={open ? { transform: "rotate(90deg)"} : {}}/>
-              <h3 style={{ margin: "0px" }}>{title}</h3>
-            </>
-            
-          }
-        </button>
+    <div className="accordion" style={style}>
+      <button
+        className={`accordion-button ${open ? "open" : ""} ${flipped ? "accordion-button-flipped" : ""}`}
+        onClick={() => setOpen((o) => !o)}
+      >
+        {flipped ? (
+          <>
+            <h3 className="accordion-title">{title}</h3>
+            <IoIosArrowForward
+              className={`accordion-arrow ${open ? "rotate" : ""}`}
+            />
+          </>
+        ) : (
+          <>
+            <IoIosArrowForward
+              className={`accordion-arrow ${open ? "rotate" : ""}`}
+            />
+            <h3 className="accordion-title">{title}</h3>
+          </>
+        )}
+      </button>
+
+      <div
+        ref={contentRef}
+        className={`accordion-content-wrapper ${open ? "open" : ""}`}
+        style={{
+          maxHeight: `${height}px`,
+        }}
+      >
+        <div className="accordion-content">{children}</div>
       </div>
-      {open && (
-        <div>
-          {children}
-        </div>
-      )}
     </div>
   );
 }

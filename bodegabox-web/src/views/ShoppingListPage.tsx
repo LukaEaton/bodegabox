@@ -128,7 +128,7 @@ export function ShoppingListPage() {
 						{expandAll ? "Collapse All" : "Expand All"}
 					</button>
 				</div>
-				<PullToRefresh onRefresh={() => getShoppingList()}>
+				<PullToRefresh onRefresh={() => getShoppingList()} style={{marginTop:"15px"}}>
 					{categories.map(category => {
 						const categoryIngredients = filteredIngredients?.filter(
 							ingredient => ingredient.categoryId == category.id && ingredient.valid
@@ -136,11 +136,12 @@ export function ShoppingListPage() {
 						return (
 							<Accordion key={category.id} title={category.name}
 								forceExpand={expandAll} style={{ marginBottom: "20px" }}>
-								<ul style={{ margin: 0, paddingLeft: "45px" }}>
+								<ul style={{ margin: 0, paddingLeft: "40px" }}>
 									{categoryIngredients?.map(ingredient => (
 										<li 
 											style={{ 
-												listStyleType: "none"
+												listStyleType: "none",
+												marginTop: "8px"
 											}}
 											key={ingredient.id}
 										><IngredientCard 
@@ -158,10 +159,10 @@ export function ShoppingListPage() {
 						);
 					})}
 					<Accordion title="Uncategorized" forceExpand={expandAll} style={{ marginBottom: "20px" }}>
-						<ul style={{ margin: 0, paddingLeft: "45px" }}>
+						<ul style={{ margin: 0, paddingLeft: "40px" }}>
 							{filteredIngredients?.filter(ingredient => !ingredient.categoryId && ingredient.valid).map(ingredient => (
 								<li 
-									style={{ listStyleType: "none" }}
+									style={{ listStyleType: "none", marginTop: "8px" }}
 									key={ingredient.id}
 								><IngredientCard 
 									ingredient={ingredient}
@@ -177,10 +178,10 @@ export function ShoppingListPage() {
 					</Accordion>
 					<hr/>
 					<Accordion title="Recently Purchased" forceExpand={expandAll} style={{ paddingBottom: "0px" }}>
-						<ul style={{ margin: 0, paddingLeft: "45px" }}>
+						<ul style={{ margin: 0, paddingLeft: "40px" }}>
 							{filteredIngredients?.filter(ingredient => !ingredient.valid).map(ingredient => (
 								<li 
-									style={{ listStyleType: "none" }}
+									style={{ listStyleType: "none", marginTop: "8px" }}
 									key={ingredient.id}
 								><IngredientCard 
 									ingredient={ingredient}

@@ -11,8 +11,13 @@ type DropdownSelectProps = {
   className?: string;
 };
 
-export function DropdownSelect({ options, value, onChange, placeholder = "Select...", className }: DropdownSelectProps) {
-
+export function DropdownSelect({
+  options,
+  value,
+  onChange,
+  placeholder = "Select...",
+  className,
+}: DropdownSelectProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -27,59 +32,40 @@ export function DropdownSelect({ options, value, onChange, placeholder = "Select
   }, []);
 
   return (
-    <div ref={ref} className={className} style={{ position: "relative" }}>
+    <div ref={ref} className={`dropdown ${className || ""}`} style={{ position: "relative" }}>
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
         className="dropdown-button"
-        style={{
-          width: "100%",
-          padding: "5px 7px",
-          cursor: "pointer",
-          borderRadius: "4px",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center"
-        }}
       >
-        {options.find(opt => opt.value == value)?.label || placeholder}
-        <div style={{ display: "flex", gap: "5px" }}>
-          <FaTimes className="dropdown-close" onClick={(e) => {e.stopPropagation(); setOpen(false); onChange(null);}}/>
-          <IoIosArrowDown style={open ? { transform: "rotate(180deg)" } : {}} />
+        {options.find((opt) => opt.value === value)?.label || placeholder}
+        <div className="dropdown-icons">
+          <FaTimes
+            className="dropdown-close"
+            onClick={(e) => {
+              e.stopPropagation();
+              setOpen(false);
+              onChange(null);
+            }}
+          />
+          <IoIosArrowDown className={`dropdown-arrow ${open ? "rotate" : ""}`} />
         </div>
       </button>
-      {open && (
-        <div
-          className="dropdown-button"
-          style={{
-            position: "absolute",
-            top: "100%",
-            left: 0,
-            right: 0,
-            zIndex: 10,
-            marginTop: "5px",
-            borderRadius: "4px",
-            maxHeight: "200px",
-            overflowY: "auto"
-          }}
-        >
-          {options.map(opt => (
-            <div
-              key={opt.value}
-              onClick={() => {
-                onChange(opt.value);
-                setOpen(false);
-              }}
-              style={{
-                padding: "5px 7px",
-                cursor: "pointer"
-              }}
-            >
-              {opt.label}
-            </div>
-          ))}
-        </div>
-      )}
+
+      <div className={`dropdown-menu ${open ? "open" : ""}`}>
+        {options.map((opt) => (
+          <div
+            key={opt.value}
+            onClick={() => {
+              onChange(opt.value);
+              setOpen(false);
+            }}
+            className="dropdown-item"
+          >
+            {opt.label}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

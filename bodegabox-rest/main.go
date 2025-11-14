@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"bodegabox-rest/middleware"
 	"bodegabox-rest/internal/ingredients"
 	"bodegabox-rest/internal/categories"
@@ -12,6 +13,23 @@ import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 )
+
+func setupTrustedProxies(router *gin.Engine) {
+	trustedProxiesEnv := os.Getenv("TRUSTED_PROXIES")
+	var trustedProxies []string
+
+	if trustedProxiesEnv != "" {
+		trustedProxies = strings.Split(trustedProxiesEnv, ",")
+		log.Printf("Using trusted proxies from env: %v", trustedProxies)
+	} else {
+		trustedProxies = []string{"127.0.0.1", "172.17.0.0/16"}
+		log.Printf("Using default trusted proxies: %v", trustedProxies)
+	}
+
+	if err := router.SetTrustedProxies(trustedProxies); err != nil {
+		log.Fatalf("Failed to set trusted proxies: %v", err)
+	}
+}
 
 func main() {
 	// Database connection parameters from environment variables
@@ -42,7 +60,10 @@ func main() {
 
 	log.Println("✅ Connected to PostgreSQL database successfully")
 
-	r := gin.Default()
+	r := gin.New()
+	r.Use(gin.Logger())
+    r.Use(gin.Recovery()) 
+	setupTrustedProxies(r)
 	r.Use(middleware.CORSMiddleware())
 
 	ingredientService := ingredients.NewService(db)
