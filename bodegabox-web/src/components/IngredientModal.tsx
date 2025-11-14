@@ -19,8 +19,6 @@ type IngredientModalProps = {
 
 export function IngredientModal({ isOpen, onClose, ingredient, onAdd, onEdit, categories, stores }: IngredientModalProps) {
 
-  if (!isOpen) return null;
-
   const inputRef = useRef<HTMLInputElement>(null);
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<number | null>(null);
@@ -35,6 +33,15 @@ export function IngredientModal({ isOpen, onClose, ingredient, onAdd, onEdit, ca
     setDescription("");
     setSelectedCategory(null);
     setSelectedStore(null);
+  };
+
+  const handleCreateIngredient = () => {
+    IngredientService.createIngredient({name: search, categoryId: null, storeId: null})
+    .then(ingredient => {
+      setSelected(ingredient.id); 
+      inputRef.current?.blur();
+      setAlert("Ingredient Created", "Success");
+    });
   }
 
   const handleAdd = () => {
@@ -55,7 +62,7 @@ export function IngredientModal({ isOpen, onClose, ingredient, onAdd, onEdit, ca
       onEdit({ ingredientId: ingredient!.id, description: description.trim()})
     }
     clearFields();
-  }
+  };
 
   const handleSearch = async (input: string): Promise<Option[]> => {
     try {
@@ -68,7 +75,7 @@ export function IngredientModal({ isOpen, onClose, ingredient, onAdd, onEdit, ca
       console.error("Failed to Search for Ingredients:", error);
       return [];
     }
-  }
+  };
 
   const addButtonConfig: ActionButtonConfig[] = [
     {
@@ -120,6 +127,8 @@ export function IngredientModal({ isOpen, onClose, ingredient, onAdd, onEdit, ca
             setSearch={setSearch}
             setSelected={setSelected}
             searchMethod={handleSearch}
+            noResultsMessage="Item not found. Create new one?"
+            noResultsAction={handleCreateIngredient}
           />
         }
         <textarea

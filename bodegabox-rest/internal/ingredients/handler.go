@@ -175,8 +175,8 @@ func RegisterRoutes(rg *gin.RouterGroup, service *Service) {
 	rg.POST("/", func(c *gin.Context) {
 		var input struct {
 			Name       string `json:"name" binding:"required"`
-			CategoryID *int    `json:"categoryId" binding:"required"`
-			StoreID    *int    `json:"storeId" binding:"required"`
+			CategoryID *int    `json:"categoryId"`
+			StoreID    *int    `json:"storeId"`
 		}
 		if err := c.ShouldBindJSON(&input); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})

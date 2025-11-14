@@ -54,7 +54,7 @@ const IngredientService = {
   },
 
   async createIngredient(ingredient: Partial<Ingredient>) {
-    await RequestService.apiRequest(`${apiBaseUrl}/ingredients/`, {
+    return RequestService.apiRequest(`${apiBaseUrl}/ingredients/`, {
         method: "POST",
         body: ingredient
     });
