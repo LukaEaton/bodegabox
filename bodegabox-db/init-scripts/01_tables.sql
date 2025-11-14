@@ -21,3 +21,16 @@ CREATE TABLE IF NOT EXISTS saved_ingredients (
     valid BOOLEAN NOT NULL DEFAULT TRUE,
     saved TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS recipes (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT,
+    image_url TEXT,
+    web_url TEXT
+);
+
+CREATE TABLE IF NOT EXISTS recipe_ingredients (
+    recipe_id INT REFERENCES recipes(id) ON DELETE CASCADE,
+    ingredient_id INT REFERENCES ingredients(id) ON DELETE CASCADE
+);

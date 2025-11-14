@@ -105,7 +105,7 @@ export function ShoppingListPage() {
 	return (
 		<div className="tab">
 			<TabHeader title="Shopping List"></TabHeader>
-			<div style={{ flex: 1, overflowY: "auto", paddingTop: "10px", padding: "10px 10px" }}>
+			<div style={{ flex: 1, overflowY: "auto", padding: "10px 10px" }}>
 				<div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
 					<DropdownSelect 
 						options={[ {value: null, label: "Select Store..."}, ...stores.map(store => ({value: store.id, label: store.name}))]}
