@@ -7,9 +7,11 @@ type SearchProps = {
     setSearch: (value: string) => void;
     setSelected: (selected: any | null) => void;
     searchMethod: (input: string) => Promise<Option[]>;
+    noResultsMessage?: string;
+    noResultsAction?: () => void;
 };
 
-export function Search({ searchRef, search, setSearch, setSelected, searchMethod }: SearchProps) {
+export function Search({ searchRef, search, setSearch, setSelected, searchMethod, noResultsMessage, noResultsAction }: SearchProps) {
     const searchContainerRef = useRef<HTMLDivElement>(null);
     const [results, setResults] = useState<Option[]>([]);
     const [loading, setLoading] = useState(false);
@@ -55,23 +57,32 @@ export function Search({ searchRef, search, setSearch, setSelected, searchMethod
                 onFocus={() => setShowResults(true)}
                 className="input-field"
             />
-            {showResults && results.length > 0 && (
+            {showResults && (
                 <div className="floating-results">
                 {loading ? (
                     <div>Loading...</div>
                 ) : (
-                    <ul>
-                    {results.map((result) => (
-                        <li 
-                            key={result.value} 
-                            onClick={() => {
-                                setSelected(result.obj? result.obj : result.value);
-                                setSearch(result.label);
-                                setShowResults(false);
-                            }}
-                        >{result.label}</li>
-                    ))}
-                    </ul>
+                        <ul>
+                            {search.length >= 2 ? 
+                                results.length > 0 ?
+                                results.map((result) => (
+                                    <li 
+                                        key={result.value} 
+                                        onClick={() => {
+                                            setSelected(result.obj? result.obj : result.value);
+                                            setSearch(result.label);
+                                            setShowResults(false);
+                                        }}
+                                    >{result.label}</li>
+                                ))
+                                :
+                                <li onClick={noResultsAction ? () => {noResultsAction(); setShowResults(false);} : () => {}}>
+                                    {noResultsMessage ? noResultsMessage : 'No Results...'}
+                                </li>
+                                :
+                                null
+                            }
+                        </ul>
                 )}
                 </div>
             )}
