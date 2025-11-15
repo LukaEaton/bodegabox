@@ -32,5 +32,7 @@ CREATE TABLE IF NOT EXISTS recipes (
 
 CREATE TABLE IF NOT EXISTS recipe_ingredients (
     recipe_id INT REFERENCES recipes(id) ON DELETE CASCADE,
-    ingredient_id INT REFERENCES ingredients(id) ON DELETE CASCADE
+    ingredient_id INT REFERENCES ingredients(id) ON DELETE CASCADE,
+    description TEXT,
+    PRIMARY KEY (recipe_id, ingredient_id)
 );

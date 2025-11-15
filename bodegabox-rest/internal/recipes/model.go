@@ -11,4 +11,12 @@ type Recipe struct {
 type RecipeIngredient struct {
 	RecipeID	int 	`json:"recipeId" db:"recipe_id"`
 	IngredientID	int	`json:"ingredientId" db:"ingredient_id"`
+	Description	string `json:"description" db:"description"`
+}
+
+type RecipeIngredientDTO struct {
+	RecipeID	int 	`json:"recipeId" db:"recipe_id"`
+	IngredientID	int	`json:"ingredientId" db:"ingredient_id"`
+	Name       string `json:"name" db:"name"`
+	Description	string `json:"description" db:"description"`
 }
