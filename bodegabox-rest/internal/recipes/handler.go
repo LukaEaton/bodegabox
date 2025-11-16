@@ -40,7 +40,23 @@ func RegisterRoutes(rg *gin.RouterGroup, service *Service, ingredientService *in
 			return
 		}
 		c.JSON(http.StatusOK, recipe)
+	})
 
+	// GET /recipes?q=<term>
+	rg.GET("/search", func(c *gin.Context) {
+		query := c.Query("q")
+		if query == "" {
+			log.Println("Search query is missing")
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Missing search query"})
+			return
+		}
+		results, err := service.SearchRecipes(query)
+		if err != nil {
+			log.Println(err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to search Recipes"})
+			return
+		}
+		c.JSON(http.StatusOK, results)
 	})
 
 	// POST /recipes

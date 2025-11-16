@@ -47,6 +47,28 @@ func (s *Service) GetRecipe(id int) (Recipe, error) {
 	return recipe, nil
 }
 
+// SearchRecipes grabs recipes with similar names to the search query
+func (s *Service) SearchRecipes(query string) ([]Recipe, error) {
+	rows, err := s.db.Query(`
+		SELECT id, name, description, image_url, web_url 
+		FROM recipes 
+		WHERE name ILIKE '%' || $1 || '%'
+	`, query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	recipes := []Recipe{}
+	for rows.Next() {
+		var r Recipe
+		if err := rows.Scan(&r.ID, &r.Name, &r.Description, &r.ImageUrl, &r.WebUrl); err != nil {
+			return nil, err
+		}
+		recipes = append(recipes, r)
+	}
+	return recipes, nil
+}
+
 // CreateRecipe creates the given recipe
 func (s *Service) CreateRecipe(name string, description string, imageUrl string, webUrl string) (Recipe, error) {
 	var id int

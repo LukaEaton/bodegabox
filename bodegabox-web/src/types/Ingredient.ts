@@ -6,3 +6,8 @@ export interface Ingredient {
   description?: string;
   valid?: boolean;
 }
+
+export interface PendingIngredient {
+  ingredientId: number;
+  description?: string;
+}
