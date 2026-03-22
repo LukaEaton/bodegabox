@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { TabHeader, PullToRefresh, RecipeCard, FloatingButton } from "../components";
+import { TabHeader, PullToRefresh, RecipeCard, FloatingButton, RecipeModal } from "../components";
 import { Recipe } from "../types";
 import { RecipeService } from "../services";
 import { useAlert } from "../context/AlertContext"
@@ -9,6 +9,8 @@ export function RecipesPage() {
 
     const [recipes, setRecipes] = useState<Recipe[]>([]);
     const [search, setSearch] = useState<string>("");
+    const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+    const [recipeModalOpen, setRecipeModalOpen] = useState<boolean>(false); 
     const { setAlert } = useAlert();
 
     const getRecipes = () => {
@@ -46,9 +48,14 @@ export function RecipesPage() {
                     <RecipeCard recipe={recipe} />
                 ))}
             </PullToRefresh>
-            <FloatingButton onClick={() => {}}>
+            <FloatingButton onClick={() => {setSelectedRecipe(null); setRecipeModalOpen(true);}}>
                 <FaPlus size={24} />
             </FloatingButton>
+            <RecipeModal
+                isOpen={recipeModalOpen}
+                onClose={() => setRecipeModalOpen(false)}
+                recipe={null}
+            />
         </div>
     );
 }

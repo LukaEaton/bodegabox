@@ -15,6 +15,7 @@ import { Modal } from "./Modal";
 import { ActionButton } from "./ActionButton";
 import { ManageModal } from "./ManageModal";
 import { RecipeCard } from "./RecipeCard";
+import { RecipeModal } from "./RecipeModal";
 
 export { 
     Navigation, 
@@ -33,5 +34,6 @@ export {
     Modal,
     ActionButton,
     ManageModal,
-    RecipeCard
+    RecipeCard,
+    RecipeModal
 };
