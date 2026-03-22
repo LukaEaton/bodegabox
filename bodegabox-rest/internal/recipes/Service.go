@@ -173,3 +173,15 @@ func (s *Service) VerifyRecipeExists(id int) (bool, error) {
 	}
 	return count > 0, nil
 }
+
+// UpdateRecipeImage updates the image URL for a recipe
+func (s *Service) UpdateRecipeImage(id int, imageUrl string) error {
+	_, err := s.db.Exec(
+		`UPDATE recipes
+			SET image_url = $2
+			WHERE id = $1`,
+			id,
+			imageUrl,
+	)
+	return err
+}

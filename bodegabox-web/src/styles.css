@@ -420,3 +420,43 @@ hr {
     width: fit-content;
     padding: 15px;
 }
+
+.file-input-wrapper {
+  border: 2px dashed var(--secondary-color);
+  border-radius: 12px;
+  height: 150px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.secondary-color {
+    color: var(--secondary-color);
+}
+
+.ingredient-panel {
+  opacity: 0;
+  transform: translateY(-10px);
+  max-height: 0;
+  overflow: hidden;
+  transition: 
+    opacity 0.25s ease,
+    transform 0.25s ease,
+    max-height 0.25s ease;
+}
+
+.ingredient-panel.enter {
+  opacity: 1;
+  transform: translateY(0);
+  max-height: 600px; /* adjust based on your content */
+}
+
+.ingredient-panel.exit {
+  opacity: 0;
+  transform: translateY(-10px);
+  max-height: 0;
+}

@@ -68,6 +68,9 @@ func main() {
 	setupTrustedProxies(r)
 	r.Use(middleware.CORSMiddleware())
 
+	const ImageDir = "/app/data/images" 
+	r.Static("/images", ImageDir)
+
 	ingredientService := ingredients.NewService(db)
 	ingredients.RegisterRoutes(r.Group("/ingredients"), ingredientService)
 	categoryService := categories.NewService(db)

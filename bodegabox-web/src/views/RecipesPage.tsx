@@ -45,7 +45,7 @@ export function RecipesPage() {
             </div>
             <PullToRefresh onRefresh={getRecipes}>
                 {recipes.map(recipe => (
-                    <RecipeCard recipe={recipe} />
+                    <RecipeCard recipe={recipe} onClick={() => { setSelectedRecipe(recipe); setRecipeModalOpen(true); }} />
                 ))}
             </PullToRefresh>
             <FloatingButton onClick={() => {setSelectedRecipe(null); setRecipeModalOpen(true);}}>
@@ -54,7 +54,7 @@ export function RecipesPage() {
             <RecipeModal
                 isOpen={recipeModalOpen}
                 onClose={() => setRecipeModalOpen(false)}
-                recipe={null}
+                recipeId={selectedRecipe?.id || null}
             />
         </div>
     );

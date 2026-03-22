@@ -3,20 +3,22 @@ import { FaLink } from "react-icons/fa";
 
 type RecipeCardProps = {
     recipe: Recipe;
+    onClick?: () => void;
 }
 
-export function RecipeCard({ recipe }: RecipeCardProps) {
+export function RecipeCard({ recipe, onClick }: RecipeCardProps) {
     return (
-        <div onClick={() => alert('modal open')} className="">
+        <div onClick={onClick}>
             <img src={`${recipe.imageUrl}`} />
-            <h4>{recipe.name}</h4>
-            <p>{recipe.description}</p>
-            <div>
+            <div className="settings-option">
+              <h4>{recipe.name}</h4>
+              <div>
                 {recipe.webUrl && 
-                    <a href={recipe.webUrl} target="_blank" rel="noopener noreferrer">
-                        <FaLink />
-                    </a>
+                  <a href={recipe.webUrl} target="_blank" rel="noopener noreferrer">
+                      <FaLink />
+                  </a>
                 }
+              </div>
             </div>
         </div>
     );

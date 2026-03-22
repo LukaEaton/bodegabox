@@ -36,8 +36,17 @@ const RecipeService = {
         });
     },
 
-    async getRecipeIngredients(): Promise<RecipeIngredient[]> {
-        return await RequestService.apiRequest(`${apiBaseUrl}/recipes/ingredients`);
+    async uploadRecipeImage(id: number, file: File) {
+        const formData = new FormData();
+        formData.append("image", file);
+        await RequestService.apiRequest(`${apiBaseUrl}/recipes/${id}/image`, {
+            method: "POST",
+            body: formData
+        });
+    },
+
+    async getRecipeIngredients(id: number): Promise<RecipeIngredient[]> {
+        return await RequestService.apiRequest(`${apiBaseUrl}/recipes/ingredients?q=${id}`);
     },
 
     async addRecipeIngredient(ri: Partial<RecipeIngredient>) {

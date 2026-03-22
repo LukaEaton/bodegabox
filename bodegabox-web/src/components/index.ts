@@ -16,6 +16,8 @@ import { ActionButton } from "./ActionButton";
 import { ManageModal } from "./ManageModal";
 import { RecipeCard } from "./RecipeCard";
 import { RecipeModal } from "./RecipeModal";
+import { ImageUpload } from "./ImageUpload";
+import { RecipeIngredientCard } from "./RecipeIngredientCard";
 
 export { 
     Navigation, 
@@ -35,5 +37,7 @@ export {
     ActionButton,
     ManageModal,
     RecipeCard,
-    RecipeModal
+    RecipeModal,
+    ImageUpload,
+    RecipeIngredientCard
 };
